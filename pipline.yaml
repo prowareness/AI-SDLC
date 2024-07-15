@@ -1,0 +1,146 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+
+  - stage: Checkout
+    jobs:
+      - job: CheckoutCode
+        steps:
+          - checkout: self
+
+  - stage: Build
+    jobs:
+
+      - job: BuildFrontend
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '14.x'
+            displayName: 'Install Node.js'
+
+          - script: |
+              npm install
+              npm run build
+            displayName: 'Build Frontend'
+
+          - publish: $(System.DefaultWorkingDirectory)/dist
+            artifact: frontend
+
+      - job: BuildBackend
+        steps:
+          - task: UseDotNet@2
+            inputs:
+              version: '6.x'
+
+          - script: |
+              dotnet restore
+              dotnet build
+            displayName: 'Build Backend'
+
+          - publish: $(System.DefaultWorkingDirectory)/bin
+            artifact: backend
+
+  - stage: Test
+    jobs:
+
+      - job: TestFrontend
+        dependsOn: BuildFrontend
+        steps:
+          - download: current
+            artifact: frontend
+
+          - script: |
+              npm run test
+            displayName: 'Run Frontend Tests'
+
+      - job: TestBackend
+        dependsOn: BuildBackend
+        steps:
+          - download: current
+            artifact: backend
+
+          - script: |
+              dotnet test
+            displayName: 'Run Backend Tests'
+
+  - stage: Package
+    dependsOn: Test
+    jobs:
+
+      - job: PackageFrontend
+        steps:
+          - download: current
+            artifact: frontend
+
+          - script: |
+              npm run package
+            displayName: 'Create Frontend Package'
+
+          - publish: $(System.DefaultWorkingDirectory)/dist
+            artifact: frontend-package
+
+      - job: PackageBackend
+        steps:
+          - download: current
+            artifact: backend
+
+          - script: |
+              dotnet publish -c Release -o ./publish
+            displayName: 'Create Backend Package'
+
+          - publish: $(System.DefaultWorkingDirectory)/publish
+            artifact: backend-package
+
+  - stage: Deploy
+    dependsOn: Package
+    jobs:
+
+      - deployment: DeployFrontend
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: frontend-package
+
+                - script: |  
+                    # Deploy frontend 
+                    # ...
+
+      - deployment: DeployBackend
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: backend-package
+
+                - script: |
+                    # Deploy backend
+                    # ...
+
+  - stage: APITests
+    dependsOn: Deploy
+    jobs:
+      - job: RunAPITests
+        steps:
+          - script: |
+              # Run API tests
+              # ...
+            displayName: 'Run API Tests'
+
+  - stage: UITests
+    dependsOn: APITests
+    jobs:
+      - job: RunUITests
+        steps:
+          - script: |
+              # Run UI tests 
+              # ...
+            displayName: 'Run UI Tests'
