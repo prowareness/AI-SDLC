@@ -17,32 +17,15 @@ stages:
 
       - job: BuildFrontend
         steps:
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '14.x'
-            displayName: 'Install Node.js'
-
           - script: |
-              npm install
-              npm run build
-            displayName: 'Build Frontend'
-
-          - publish: $(System.DefaultWorkingDirectory)/dist
-            artifact: frontend
+              sh ./BuildFrontend.sh
+            displayName: 'Run Build Frontend Stage'
 
       - job: BuildBackend
         steps:
-          - task: UseDotNet@2
-            inputs:
-              version: '6.x'
-
           - script: |
-              dotnet restore
-              dotnet build
-            displayName: 'Build Backend'
-
-          - publish: $(System.DefaultWorkingDirectory)/bin
-            artifact: backend
+              sh ./BuildBackend.sh
+            displayName: 'Run Build Backend Stage'
 
   - stage: Test
     jobs:
@@ -50,22 +33,16 @@ stages:
       - job: TestFrontend
         dependsOn: BuildFrontend
         steps:
-          - download: current
-            artifact: frontend
-
           - script: |
-              npm run test
-            displayName: 'Run Frontend Tests'
+              sh ./TestFrontend.sh
+            displayName: 'Run Test Frontend Stage'
 
       - job: TestBackend
         dependsOn: BuildBackend
         steps:
-          - download: current
-            artifact: backend
-
           - script: |
-              dotnet test
-            displayName: 'Run Backend Tests'
+              sh ./TestBackend.sh
+            displayName: 'Run Test Backend Stage'
 
   - stage: Package
     dependsOn: Test
@@ -73,15 +50,9 @@ stages:
 
       - job: PackageFrontend
         steps:
-          - download: current
-            artifact: frontend
-
           - script: |
-              npm run package
-            displayName: 'Create Frontend Package'
-
-          - publish: $(System.DefaultWorkingDirectory)/dist
-            artifact: frontend-package
+              sh ./PackageFrontend.sh
+            displayName: 'Run Package Frontend Stage'
 
       - job: PackageBackend
         steps:
@@ -89,8 +60,8 @@ stages:
             artifact: backend
 
           - script: |
-              dotnet publish -c Release -o ./publish
-            displayName: 'Create Backend Package'
+              sh ./Package.sh
+            displayName: 'Run Package Stage'
 
           - publish: $(System.DefaultWorkingDirectory)/publish
             artifact: backend-package
@@ -108,9 +79,9 @@ stages:
                 - download: current
                   artifact: frontend-package
 
-                - script: |  
-                    # Deploy frontend 
-                    # ...
+                - script: |
+                    sh ./Deploy.sh
+                  displayName: 'Run Deploy Stage'
 
       - deployment: DeployBackend
         environment: production
@@ -122,8 +93,8 @@ stages:
                   artifact: backend-package
 
                 - script: |
-                    # Deploy backend
-                    # ...
+                    sh ./Deploy.sh
+                  displayName: 'Run Deploy Stage'
 
   - stage: APITests
     dependsOn: Deploy
@@ -131,9 +102,8 @@ stages:
       - job: RunAPITests
         steps:
           - script: |
-              # Run API tests
-              # ...
-            displayName: 'Run API Tests'
+              sh ./APITests.sh
+            displayName: 'Run API Tests Stage'
 
   - stage: UITests
     dependsOn: APITests
@@ -141,6 +111,5 @@ stages:
       - job: RunUITests
         steps:
           - script: |
-              # Run UI tests 
-              # ...
-            displayName: 'Run UI Tests'
+              sh ./UITests.sh
+            displayName: 'Run UI Tests Stage'
