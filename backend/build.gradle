@@ -1,0 +1,98 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    ext {
+        openapiGeneratorVersion = '7.0.0'
+    }
+    dependencies {
+        classpath "org.openapitools:openapi-generator-gradle-plugin:${openapiGeneratorVersion}"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id "org.openapi.generator" version "${openapiGeneratorVersion}"
+}
+
+apply plugin: 'org.openapi.generator'
+
+configurations {
+    integrationCompile.extendsFrom testCompile
+    integrationRuntime.extendsFrom testRuntime
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    all*.exclude group: 'org.latencyutils', module:'LatencyUtils'
+    all {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    //implementation 'com.azure.spring:spring-cloud-azure-starter'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    runtimeOnly 'org.xerial:sqlite-jdbc:3.36.0.3'
+    implementation 'org.hibernate.orm:hibernate-core'
+    implementation "jakarta.transaction:jakarta.transaction-api"
+    implementation 'org.hibernate.orm:hibernate-community-dialects:6.4.1.Final'
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+    implementation ("org.openapitools:openapi-generator-gradle-plugin:7.0.0")
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/api-config.yaml".toString()
+    outputDir = "$buildDir/generated-sources/".toString()
+    apiPackage = "com.devon.recruitmentmgmt.api"
+    invokerPackage = "com.devon.recruitmentmgmt"
+    modelPackage = "com.devon.recruitmentmgmt.to"
+    configOptions = [
+            dateLibrary            : "java17",
+            interfaceOnly          : "true",
+            skipDefaultInterface   : "true",
+            generateSupportingFiles: "false",
+            useSpringBoot3         : "true",
+            additionalModelTypeAnnotations: "@lombok.Builder @lombok.NoArgsConstructor @lombok.AllArgsConstructor"
+    ]
+    typeMappings = [
+            float: "java.math.BigDecimal"
+    ]
+    globalProperties = [
+            modelDocs: "false",
+            models   : "",
+            apis     : ""
+    ]
+}
+sourceSets {
+    main {
+        java {
+            srcDir(files("${openApiGenerate.outputDir.get()}/src/main"))
+        }
+    }
+}
+
+// Task dependencies
+compileJava.dependsOn tasks.openApiGenerate
