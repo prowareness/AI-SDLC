@@ -73,6 +73,13 @@ stages:
           - script: |
               sh ./scripts/run-api-tests.sh
             displayName: "Run API Tests Stage"
+          - task: PublishPipelineArtifact@1
+            displayName: "Publish API test results"
+            condition: always()
+            inputs:
+              targetPath: $(System.DefaultWorkingDirectory)/artifacts
+              artifactName: api-test-results
+              artifactType: PipelineArtifact
 
   - stage: UITests
     dependsOn: APITests
@@ -82,3 +89,10 @@ stages:
           - script: |
               sh ./scripts/run-ui-tests.sh
             displayName: "Run UI Tests Stage"
+          - task: PublishPipelineArtifact@1
+            displayName: "Publish UI test results"
+            condition: always()
+            inputs:
+              targetPath: $(System.DefaultWorkingDirectory)/artifacts
+              artifactName: ui-test-results
+              artifactType: PipelineArtifact
