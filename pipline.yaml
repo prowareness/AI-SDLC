@@ -2,10 +2,9 @@ trigger:
   - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 stages:
-
   - stage: Checkout
     jobs:
       - job: CheckoutCode
@@ -14,51 +13,48 @@ stages:
 
   - stage: Build
     jobs:
-
       - job: BuildFrontend
         steps:
           - script: |
-              sh ./BuildFrontend.sh
-            displayName: 'Run Build Frontend Stage'
+              sh ./scripts/build-frontend.sh
+            displayName: "Run Build Frontend Stage"
 
       - job: BuildBackend
         steps:
           - script: |
-              sh ./BuildBackend.sh
-            displayName: 'Run Build Backend Stage'
+              sh ./scripts/build-backend.sh
+            displayName: "Run Build Backend Stage"
 
   - stage: Test
     jobs:
-
       - job: TestFrontend
         dependsOn: BuildFrontend
         steps:
           - script: |
-              sh ./TestFrontend.sh
-            displayName: 'Run Test Frontend Stage'
+              sh ./scripts/test-frontend.sh
+            displayName: "Run Test Frontend Stage"
 
       - job: TestBackend
         dependsOn: BuildBackend
         steps:
           - script: |
-              sh ./TestBackend.sh
-            displayName: 'Run Test Backend Stage'
+              sh ./scripts/test-backend.sh
+            displayName: "Run Test Backend Stage"
 
   - stage: Package
     dependsOn: Test
     jobs:
-
       - job: PackageFrontend
         steps:
           - script: |
-              sh ./PackageFrontend.sh
-            displayName: 'Run Package Frontend Stage'
+              sh ./scripts/package-frontend.sh
+            displayName: "Run Package Frontend Stage"
 
       - job: PackageBackend
         steps:
           - script: |
-              sh ./PackageBackend.sh
-            displayName: 'Run Package Backend Stage'
+              sh ./scripts/package-backend.sh
+            displayName: "Run Package Backend Stage"
 
   - stage: Deploy
     dependsOn: Package
@@ -66,8 +62,8 @@ stages:
       - job: Deploy
         steps:
           - script: |
-              sh ./Deploy.sh
-            displayName: 'Run Deploy Stage'
+              sh ./scripts/deploy.sh
+            displayName: "Run Deploy Stage"
 
   - stage: APITests
     dependsOn: Deploy
@@ -75,8 +71,8 @@ stages:
       - job: RunAPITests
         steps:
           - script: |
-              sh ./APITests.sh
-            displayName: 'Run API Tests Stage'
+              sh ./scripts/run-api-tests.sh
+            displayName: "Run API Tests Stage"
 
   - stage: UITests
     dependsOn: APITests
@@ -84,5 +80,5 @@ stages:
       - job: RunUITests
         steps:
           - script: |
-              sh ./UITests.sh
-            displayName: 'Run UI Tests Stage'
+              sh ./scripts/run-ui-tests.sh
+            displayName: "Run UI Tests Stage"
