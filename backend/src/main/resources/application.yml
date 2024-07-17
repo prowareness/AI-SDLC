@@ -2,8 +2,14 @@ spring:
   datasource:
     url: jdbc:sqlite:database.db
     driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 1
   jpa:
     database-platform: org.hibernate.dialect.SQLiteDialect
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: none
+      show-sql: true
+      hb2ddl.auto: update
+
+server:
+  port : 8091
