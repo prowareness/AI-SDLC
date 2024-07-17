@@ -3,62 +3,18 @@ info:
   title: Recruitment API
   version: 1.0.0
 paths:
-  /api/recruiters/add:
-    post:
-      summary: Add a new recruiter
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                FirstName:
-                  type: string
-                LastName:
-                  type: string
-                Email:
-                  type: string
-                PhoneNumber:
-                  type: integer
-      responses:
-        '201':
-          description: Created
-        '400':
-          description: Bad request
-
-  /api/recruiters/getAll:
+  /api/vacancies:
     get:
-      summary: Get all recruiters
+      summary: Get all vacancies
       responses:
         '200':
-          description: A list of recruiters
+          description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Recruiter'
-  /api/recruiters/{RecruiterID}:
-    get:
-      summary: Get a recruiter by ID
-      parameters:
-        - in: path
-          name: RecruiterID
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: A single recruiter
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Recruiter'
-        '404':
-          description: Not found
-
-  /api/vacancy/add:
+                  $ref: '#/components/schemas/VacancyResponse'
     post:
       summary: Add a new vacancy
       requestBody:
@@ -66,93 +22,88 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                JobTitle:
-                  type: string
-                Description:
-                  type: string
-                Requirements:
-                  type: string
-                Location:
-                  type: string
-                MaxSalary:
-                  type: number
-                ApplicationDeadline:
-                  type: string
-                  format: date-time
-                CreatedBy:
-                  type: integer
+              $ref: '#/components/schemas/CreateVacancyRequest'
       responses:
         '201':
           description: Created
-        '400':
-          description: Bad request
-  /api/vacancy/getAll:
-    get:
-      summary: Get all vacancies
-      responses:
-        '200':
-          description: A list of vacancies
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Vacancy'
-  /api/vacancy/{VacancyID}:
+                $ref: '#/components/schemas/CreateVacancyResponse'
+        '400':
+          description: Bad request
+  /api/vacancies/{vacancyId}:
     get:
-      summary: Get a vacancy by ID
+      summary: Get a specific vacancy by ID
       parameters:
         - in: path
-          name: VacancyID
+          name: vacancyId
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: A single vacancy
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Vacancy'
+                $ref: '#/components/schemas/VacancyResponse'
         '404':
-          description: Not found
+          description: Not Found
+
 components:
   schemas:
-    Recruiter:
+    VacancyResponse:
       type: object
       properties:
-        RecruiterID:
-          type: integer
-        FirstName:
+        vacancyId:
           type: string
-        LastName:
+        jobTitle:
           type: string
-        Email:
+        description:
           type: string
-        PhoneNumber:
-          type: integer
-        CreationDate:
+        requirements:
           type: string
-          format: date-time
-    Vacancy:
-      type: object
-      properties:
-        VacancyID:
+        location:
           type: string
-        JobTitle:
-          type: string
-        Description:
-          type: string
-        Requirements:
-          type: string
-        Location:
-          type: string
-        MaxSalary:
+        maxSalary:
           type: number
-        ApplicationDeadline:
+          format: float
+        applicationDeadline:
           type: string
-          format: date-time
-        CreatedBy:
+          format: date
+        createdBy:
           type: integer
+
+    CreateVacancyRequest:
+      type: object
+      properties:
+        jobTitle:
+          type: string
+          example: Developer
+        description:
+          type: string
+          example: Looking for a Java developer
+        requirements:
+          type: string
+          example: Must be having hands experience in Java
+        location:
+          type: string
+          example: Bangalore
+        maxSalary:
+          type: number
+          format: float
+          example: 10000000.23
+        applicationDeadline:
+          type: string
+          format: date
+          example: 2024-12-31
+        createdBy:
+          type: integer
+          example: 1
+
+    CreateVacancyResponse:
+      type: object
+      properties:
+        vacancyId:
+          type: string
