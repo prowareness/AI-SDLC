@@ -18,14 +18,9 @@ plugins {
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.5'
     id "org.openapi.generator" version "${openapiGeneratorVersion}"
-    id 'war'
 }
 
 apply plugin: 'org.openapi.generator'
-
-group = 'com.devon'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
 
 configurations {
     integrationCompile.extendsFrom testCompile
@@ -48,6 +43,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    //implementation 'com.azure.spring:spring-cloud-azure-starter'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -96,10 +92,6 @@ sourceSets {
             srcDir(files("${openApiGenerate.outputDir.get()}/src/main"))
         }
     }
-}
-
-test {
-    useJUnitPlatform()
 }
 
 // Task dependencies
