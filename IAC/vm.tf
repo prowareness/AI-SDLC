@@ -5,20 +5,20 @@ provider "azurerm" {
 
 # Create a resource group
 resource "azurerm_resource_group" "example" {
-  name     = "example-rg"
-  location = "West Europe"
+  name     = "AI-SDLC"
+  location = "East US"
 }
 
 # Create a virtual network and subnet
 resource "azurerm_virtual_network" "example" {
-  name                = "example-vnet"
+  name                = "SDLC-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 }
 
 resource "azurerm_subnet" "example" {
-  name                 = "example-subnet"
+  name                 = "SDLC-subnet"
   resource_group_name  = azurerm_resource_group.example.name
   virtual_network_name = azurerm_virtual_network.example.name
   address_prefixes     = ["10.0.1.0/24"]
@@ -26,7 +26,7 @@ resource "azurerm_subnet" "example" {
 
 # Create a network security group and rules
 resource "azurerm_network_security_group" "example" {
-  name                = "example-nsg"
+  name                = "SDLC-nsg"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 
@@ -57,7 +57,7 @@ resource "azurerm_network_security_group" "example" {
 
 # Create a network interface
 resource "azurerm_network_interface" "example" {
-  name                = "example-nic"
+  name                = "SDLC-nic"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 
@@ -77,7 +77,7 @@ resource "azurerm_network_interface_security_group_association" "example" {
 
 # Create a public IP address
 resource "azurerm_public_ip" "example" {
-  name                = "example-pip"
+  name                = "SDLC-pip"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
   allocation_method   = "Dynamic"
@@ -85,7 +85,7 @@ resource "azurerm_public_ip" "example" {
 
 # Create a virtual machine
 resource "azurerm_linux_virtual_machine" "example" {
-  name                = "example-vm"
+  name                = "SDLC-vm"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_resource_group.example.location
   size                = "Standard_B1s"
