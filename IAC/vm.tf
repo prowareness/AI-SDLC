@@ -82,7 +82,7 @@ resource "azurerm_linux_virtual_machine" "aisdlc_vm" {
   name                = "SDLC-vm"
   resource_group_name = data.azurerm_resource_group.aisdlc_resource_group.name
   location            = data.azurerm_resource_group.aisdlc_resource_group.location
-  size                = "Standard_B1s"
+  size                = "Standard_DC1s_v2"
   admin_username      = "adminuser"
   network_interface_ids = [
     azurerm_network_interface.aisdlc_nertwork_interface.id,
