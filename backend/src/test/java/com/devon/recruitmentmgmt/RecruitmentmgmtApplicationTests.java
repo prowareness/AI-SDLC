@@ -1,4 +1,3 @@
-/*
 package com.devon.recruitmentmgmt;
 
 import org.junit.jupiter.api.Test;
@@ -12,4 +11,3 @@ class RecruitmentmgmtApplicationTests {
 	}
 
 }
-*/

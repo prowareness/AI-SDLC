@@ -58,26 +58,7 @@ components:
       properties:
         vacancyId:
           type: string
-        jobTitle:
-          type: string
-        description:
-          type: string
-        requirements:
-          type: string
-        location:
-          type: string
-        maxSalary:
-          type: number
-          format: float
-        applicationDeadline:
-          type: string
-          format: date
-        createdBy:
-          type: integer
-
-    CreateVacancyRequest:
-      type: object
-      properties:
+          example: JOB000001
         jobTitle:
           type: string
           example: Developer
@@ -96,14 +77,50 @@ components:
           example: 10000000.23
         applicationDeadline:
           type: string
-          format: date
-          example: 2024-12-31
+          format: date-time
+          example: 2024-12-31T23:59:59
         createdBy:
-          type: integer
-          example: 1
+          type: string
+          example: "john.doe@devon.nl"
+
+    CreateVacancyRequest:
+      type: object
+      required:
+        - jobTitle
+        - description
+        - requirements
+        - location
+        - maxSalary
+        - applicationDeadline
+        - createdBy
+      properties:
+        jobTitle:
+          type: string
+          example: Developer
+        description:
+          type: string
+          example: Looking for a Java developer
+        requirements:
+          type: string
+          example: Must be having hands-on experience in Java
+        location:
+          type: string
+          example: Bangalore
+        maxSalary:
+          type: number
+          format: float
+          example: 10000000.23
+        applicationDeadline:
+          type: string
+          format: date-time
+          example: 2024-12-31T23:59:59
+        createdBy:
+          type: string
+          example: "john.doe@devon.nl"
 
     CreateVacancyResponse:
       type: object
       properties:
         vacancyId:
           type: string
+          example: JOB000001
