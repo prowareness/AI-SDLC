@@ -90,6 +90,7 @@ function UserForm() {
       ...prevErrors,
       [name]: !isValid,
     }));
+    console.log("Errors:", errors);
 
     setHelperTexts((prevHelperTexts) => ({
       ...prevHelperTexts,
@@ -107,7 +108,10 @@ function UserForm() {
     fields.forEach((field) => {
       validateField(field, formData[field]);
     });
-    if (areAllErrorsFalse()) {
+    const isAtLeastOneFieldNotEmpty = fields.some(
+      (field) => formData[field] !== ""
+    );
+    if (areAllErrorsFalse() && isAtLeastOneFieldNotEmpty) {
       setOpen(true);
     } else {
       setOpen(false);
@@ -199,7 +203,6 @@ function UserForm() {
               id="max-salary"
               label="Max Salary"
               name="salary"
-              //type="number"
               value={formData.salary}
               onChange={handleChange}
               error={errors.salary}
@@ -230,6 +233,7 @@ function UserForm() {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        maxWidth="lg"
       >
         <DialogTitle id="alert-dialog-title">
           {"Success"}
@@ -248,7 +252,7 @@ function UserForm() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Data saved successfully.
+            Job Id: JOB12345 created successfully.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
