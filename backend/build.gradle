@@ -88,5 +88,9 @@ sourceSets {
     }
 }
 
+test {
+    useJUnitPlatform()
+}
+
 // Task dependencies
 compileJava.dependsOn tasks.openApiGenerate
