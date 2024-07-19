@@ -1,11 +1,7 @@
 {
   "name": "test",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "playwright test --reporter=list,html"
-  },
   "scripts": {},
   "keywords": [],
   "author": "",
@@ -13,5 +9,14 @@
   "devDependencies": {
     "@playwright/test": "^1.45.2",
     "@types/node": "^20.14.11"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "description": "",
+  "dependencies": {
+    "playwright": "^1.45.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
   }
 }
