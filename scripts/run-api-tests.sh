@@ -1,25 +1,25 @@
 #!/bin/bash
 
-# Define the Postman collection
-POSTMAN_COLLECTION="Your_Postman_Collection.json"
+# Define Postman collection and environment files
+COLLECTION_PATH="path/to/your/collection.json"
+ENVIRONMENT_PATH="path/to/your/environment.json"
+# Define the output directory for the HTML report
+REPORT_OUTPUT_DIR="./newman"
+REPORT_NAME="postman_report.html"
+# Define Azure artifact directory
+AZURE_ARTIFACT_DIR="/path/to/azure/artifact/directory"
 
-# Define the environment file
-ENV_FILE="Your_Environment_File.json"
-
-# Define the report file
-REPORT_FILE="newman-report.html"
-
-# Define the Azure artifact directory
-AZURE_ARTIFACT_DIR="Your_Azure_Artifact_Directory"
+# Ensure the report output directory exists
+mkdir -p $REPORT_OUTPUT_DIR
 
 # Run the Postman collection with Newman and generate an HTML report
-newman run $POSTMAN_COLLECTION -e $ENV_FILE --reporters cli,html --reporter-html-export $REPORT_FILE
+newman run $COLLECTION_PATH -e $ENVIRONMENT_PATH --reporters=cli,htmlextra --reporter-htmlextra-export $REPORT_OUTPUT_DIR/$REPORT_NAME
 
-# Capture the exit code
+# Capture the exit code of the Newman command
 EXIT_CODE=$?
 
-# Copy the report to the Azure artifact directory
-cp $REPORT_FILE $AZURE_ARTIFACT_DIR
+# Copy the HTML report to the Azure artifact directory
+cp $REPORT_OUTPUT_DIR/$REPORT_NAME $AZURE_ARTIFACT_DIR
 
-# Exit with the Newman exit code
+# Exit the script with the Newman command's exit code
 exit $EXIT_CODE
