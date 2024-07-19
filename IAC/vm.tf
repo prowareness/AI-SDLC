@@ -1,6 +1,6 @@
 # Retrive a resource group
 data "azurerm_resource_group" "aisdlc_resource_group" {
-  name = "AI-SDLC"
+  name = "AISDLC"
 }
 
 # Create a virtual network and subnet
@@ -59,7 +59,7 @@ resource "azurerm_network_interface" "aisdlc_nertwork_interface" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.aisdlc_subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.aisdlc_piblic_ip.id
+    public_ip_address_id          = azurerm_public_ip.aisdlc_public_ip.id
   }
 }
 
@@ -70,7 +70,7 @@ resource "azurerm_network_interface_security_group_association" "aisdlc_network_
 }
 
 # Create a public IP address
-resource "azurerm_public_ip" "aisdlc_piblic_ip" {
+resource "azurerm_public_ip" "aisdlc_public_ip" {
   name                = "SDLC-pip"
   location            = data.azurerm_resource_group.aisdlc_resource_group.location
   resource_group_name = data.azurerm_resource_group.aisdlc_resource_group.name
@@ -100,21 +100,15 @@ resource "azurerm_linux_virtual_machine" "aisdlc_vm" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
     version   = "latest"
   }
 
-  user_data = <<-EOF
-    #!/bin/bash
-    sudo apt-get update
-    sudo apt-get install -y openjdk-8-jdk
-    sudo apt-get install -y tomcat8
-    sudo systemctl start tomcat8
-    sudo systemctl enable tomcat8
-  EOF
+  user_data = base64encode(file("deploy_userdata.sh"))
 }
 
+
 output "public_ip_address" {
-  value = azurerm_public_ip.aisdlc_piblic_ip.ip_address
+  value = azurerm_public_ip.aisdlc_public_ip.ip_address
 }
