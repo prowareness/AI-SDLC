@@ -29,6 +29,7 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
 
     @Override
     public ResponseEntity<CreateVacancyResponse> apiVacanciesPost(CreateVacancyRequest createVacancyRequest) {
+        log.info("Hit /api/vacancies with RequestBody {}", createVacancyRequest.toString());
         return new ResponseEntity<>(vacancyService.createVacancy(createVacancyRequest), HttpStatus.CREATED);
     }
 

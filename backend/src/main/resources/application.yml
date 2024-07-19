@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:sqlite:backend/recruitment.db
+    url: jdbc:sqlite:recruitment.db
     driver-class-name: org.sqlite.JDBC
     hikari:
       maximum-pool-size: 1
@@ -17,4 +17,4 @@ configuration :
   formatJobId : JOB%06d
 
 server:
-  port : 8091
+  port : 8080

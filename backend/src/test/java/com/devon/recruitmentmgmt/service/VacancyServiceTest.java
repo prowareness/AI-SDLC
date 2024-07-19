@@ -5,17 +5,23 @@ import com.devon.recruitmentmgmt.model.Vacancy;
 import com.devon.recruitmentmgmt.repository.VacancyRepository;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
+import com.devon.recruitmentmgmt.validation.VacancyRequestValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class VacancyServiceTest {
 
@@ -25,6 +31,9 @@ public class VacancyServiceTest {
     @Mock
     private Configuration configuration;
 
+    @Mock
+    private VacancyRequestValidator vacancyRequestValidator;
+
     @InjectMocks
     private VacancyService vacancyService;
 
@@ -33,6 +42,7 @@ public class VacancyServiceTest {
         MockitoAnnotations.openMocks(this);
         when(configuration.getDefaultJobId()).thenReturn("JOB000001");
         when(configuration.getFormatJobId()).thenReturn("JOB%06d");
+        doNothing().when(vacancyRequestValidator).validateCreateVacancyRequest(any(CreateVacancyRequest.class));
     }
 
     @Test
@@ -58,6 +68,17 @@ public class VacancyServiceTest {
 
         // Then
         assertEquals("JOB000002", response.getVacancyId());
+    }
+
+    @Test
+    public void createVacancy_shouldThrowException_whenValidationFails() {
+        // Given
+        CreateVacancyRequest request = new CreateVacancyRequest();
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Validation failed"))
+                .when(vacancyRequestValidator).validateCreateVacancyRequest(any(CreateVacancyRequest.class));
+
+        // When & Then
+        assertThrows(ResponseStatusException.class, () -> vacancyService.createVacancy(request));
     }
 
     @Test
