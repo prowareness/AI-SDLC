@@ -13,7 +13,7 @@ spring:
     open-in-view: false
 
 configuration :
-  defaultJobId: JOB00001
+  defaultJobId: JOB000001
   formatJobId : JOB%06d
 
 server:
