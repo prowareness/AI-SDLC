@@ -1,5 +1,5 @@
 trigger:
-  - main
+  - Main
 
 pool:
   name: "Azure Pipelines"
