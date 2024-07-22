@@ -71,6 +71,7 @@ stages:
       - job: RunAPITests
         steps:
           - script: |
+              chmod +x ./scripts/run-api-tests.sh
               sh ./scripts/run-api-tests.sh
             displayName: "Run API Tests Stage"
           - task: PublishPipelineArtifact@1
@@ -87,6 +88,7 @@ stages:
       - job: RunUITests
         steps:
           - script: |
+              chmod +x ./scripts/run-ui-tests.sh
               sh ./scripts/run-ui-tests.sh
             displayName: "Run UI Tests Stage"
           - task: PublishPipelineArtifact@1

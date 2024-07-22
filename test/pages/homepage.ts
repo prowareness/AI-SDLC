@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 class Homepage {
   private page: Page;
@@ -6,7 +6,7 @@ class Homepage {
 
   constructor(page: Page) {
     this.page = page;
-    this.createButton = page.locator('text=Create');
+    this.createButton = page.locator("button", { hasText: "Create" });
   }
 
   async navigate(url: string) {

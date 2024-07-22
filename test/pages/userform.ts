@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 class UserFormPage {
   private page: Page;
@@ -13,14 +13,14 @@ class UserFormPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.jobTitleInput = page.locator('input[placeholder="Enter job title"]');
-    this.descriptionInput = page.locator('textarea[placeholder="Enter job description"]');
-    this.requirementsInput = page.locator('textarea[placeholder="Enter job requirements"]');
-    this.locationInput = page.locator('input[placeholder="Enter job location"]');
-    this.salaryRangeInput = page.locator('input[placeholder="Enter expected salary range"]');
-    this.applicationDeadlineInput = page.locator('input[placeholder="Select application deadline"]');
-    this.saveButton = page.locator('text=Save');
-    this.confirmationDialog = page.locator('text=Vacancy created successfully'); // Adjust locator if needed
+    this.jobTitleInput = page.locator("#job-title");
+    this.descriptionInput = page.locator("#description");
+    this.requirementsInput = page.locator("#requirements");
+    this.locationInput = page.locator("#locations");
+    this.salaryRangeInput = page.locator("#max-salary");
+    this.applicationDeadlineInput = page.locator("#last-date");
+    this.saveButton = page.locator("button", { hasText: "Submit" });
+    this.confirmationDialog = page.locator("text=Vacancy created successfully"); // Adjust locator if needed
   }
 
   async fillJobTitle(title: string) {
@@ -36,7 +36,8 @@ class UserFormPage {
   }
 
   async selectLocation(location: string) {
-    await this.locationInput.fill(location);
+    await this.locationInput.click();
+    await this.page.locator("#menu-location li", { hasText: location }).click();
   }
 
   async fillMaxSalary(salaryRange: string) {
@@ -56,7 +57,7 @@ class UserFormPage {
   }
 
   async closeDialog() {
-    const closeButton = this.page.locator('text=Close'); // Adjust locator if needed
+    const closeButton = this.page.locator("text=Close"); // Adjust locator if needed
     await closeButton.click();
   }
 }
