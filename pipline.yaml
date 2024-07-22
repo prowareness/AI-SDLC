@@ -2,7 +2,7 @@ trigger:
   - Main
 
 pool:
-  name: "default"
+  name: "Azure Pipelines"
   demands: Agent.Name -equals "Hosted Agent"
 
 stages:
