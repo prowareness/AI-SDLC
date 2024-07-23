@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include:
+      - "*"
+
+pool:
+  vmImage: "ubuntu-latest"
+
+jobs:
+  - job: ApiTests
+    displayName: "Run API tests"
+    steps:
+      - script: |
+          chmod +x ./scripts/run-api-tests.sh
+          sh ./scripts/run-api-tests.sh
+        displayName: "Run API Tests Stage"
+
+      - task: PublishPipelineArtifact@1
+        displayName: "Publish API test results"
+        condition: always()
+        inputs:
+          targetPath: $(System.DefaultWorkingDirectory)/artifacts
+          artifactName: api-test-results
+          artifactType: pipeline
+
+  - job: UiTests
+    displayName: "Run UI tests"
+    steps:
+      - script: |
+          chmod +x ./scripts/run-ui-tests.sh
+          sh ./scripts/run-ui-tests.sh
+        displayName: "Run UI Tests Stage"
+
+      - task: PublishPipelineArtifact@1
+        displayName: "Publish UI test results"
+        condition: always()
+        inputs:
+          targetPath: $(System.DefaultWorkingDirectory)/artifacts
+          artifactName: ui-test-results
+          artifactType: pipeline
