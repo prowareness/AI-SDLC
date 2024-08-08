@@ -95,3 +95,7 @@ test {
 
 // Task dependencies
 compileJava.dependsOn tasks.openApiGenerate
+
+war {
+    archiveFileName = 'recruitment.war'
+}
