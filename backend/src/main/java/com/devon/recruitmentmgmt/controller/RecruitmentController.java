@@ -1,9 +1,12 @@
 package com.devon.recruitmentmgmt.controller;
 
+import com.devon.recruitmentmgmt.service.LoginService;
 import com.devon.recruitmentmgmt.service.VacancyService;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
 import com.devon.recruitmentmgmt.to.VacancyResponse;
+import com.devon.recruitmentmgmt.to.LoginResponse;
+import com.devon.recruitmentmgmt.to.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import java.util.List;
 public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiApi {
 
     private final VacancyService vacancyService;
+    private final LoginService loginService;
 
     @Override
     public ResponseEntity<List<VacancyResponse>> apiVacanciesGet() {
@@ -36,5 +40,16 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
     @Override
     public ResponseEntity<VacancyResponse> apiVacanciesVacancyIdGet(String vacancyId) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<LoginResponse> apiLoginPost(LoginRequest loginRequest) {
+        log.info("Hit /api/login with RequestBody {}", loginRequest.toString());
+        com.devon.recruitmentmgmt.to.LoginResponse response = loginService.validateLogin(loginRequest);
+        if (response.getSuccess()) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
     }
 }

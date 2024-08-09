@@ -1,8 +1,11 @@
 package com.devon.recruitmentmgmt.controller;
 
+import com.devon.recruitmentmgmt.service.LoginService;
 import com.devon.recruitmentmgmt.service.VacancyService;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
+import com.devon.recruitmentmgmt.to.LoginRequest;
+import com.devon.recruitmentmgmt.to.LoginResponse;
 import org.apache.catalina.filters.CorsFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,9 @@ public class RecruitmentControllerTest {
     @MockBean
     private VacancyService vacancyService;
 
+    @MockBean
+    private LoginService loginService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -61,8 +67,8 @@ public class RecruitmentControllerTest {
         when(vacancyService.createVacancy(request)).thenReturn(response);
 
         mockMvc.perform(post("/api/vacancies")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
@@ -77,4 +83,31 @@ public class RecruitmentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }*/
+
+
+    @Test
+    public void testApiLoginPost_Success() throws Exception {
+        LoginRequest request = new LoginRequest("john.doe@devon.nl", "devon123");
+        LoginResponse response = LoginResponse.builder().success(true).message("Login successful").build();
+        when(loginService.validateLogin(request)).thenReturn(response);
+
+        mockMvc.perform(post("/api/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
+    }
+
+    @Test
+    public void testApiLoginPost_Failure() throws Exception {
+        LoginRequest request = new LoginRequest("john.doe@devon.nl", "wrongpassword");
+        LoginResponse response = LoginResponse.builder().success(false).message("Invalid email or password").build();
+        when(loginService.validateLogin(request)).thenReturn(response);
+
+        mockMvc.perform(post("/api/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
+    }
 }
