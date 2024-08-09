@@ -10,4 +10,5 @@ import org.springframework.stereotype.Component;
 public class Configuration {
     String defaultJobId;
     String formatJobId;
+    String dateTimeFormat;
 }

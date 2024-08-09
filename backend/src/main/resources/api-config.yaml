@@ -3,6 +3,25 @@ info:
   title: Recruitment API
   version: 1.0.0
 paths:
+  /api/login:
+    post:
+      summary: Validate login credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Unauthorized
+
   /api/vacancies:
     get:
       summary: Get all vacancies
@@ -53,6 +72,29 @@ paths:
 
 components:
   schemas:
+    LoginRequest:
+      type: object
+      required:
+        - emailId
+        - password
+      properties:
+        emailId:
+          type: string
+          example: john.doe@devon.nl
+        password:
+          type: string
+          example: devon123
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Login successful"
+
     VacancyResponse:
       type: object
       properties:
