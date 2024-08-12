@@ -8,8 +8,8 @@ rm terraform_1.4.6_linux_amd64.zip
 
 # Change to the IAC folder
 pwd
-cd IAC
-
+cd ./IAC
+az login 
 # Initialize Terraform
 terraform init
 
