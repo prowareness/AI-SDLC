@@ -7,7 +7,8 @@ sudo mv terraform /usr/local/bin/
 rm terraform_1.4.6_linux_amd64.zip
 
 # Change to the IAC folder
-cd /IAC/
+pwd
+cd IAC
 
 # Initialize Terraform
 terraform init
