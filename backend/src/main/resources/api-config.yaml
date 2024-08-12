@@ -25,6 +25,41 @@ paths:
   /api/vacancies:
     get:
       summary: Get all vacancies
+      parameters:
+        - in: query
+          name: createdBy
+          required: true
+          schema:
+            type: string
+          description: Email of the user who created the vacancies
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            default: 5
+          description: Maximum number of vacancies to return
+        - in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+            default: 0
+          description: Number of vacancies to skip before starting to collect the result set
+        - in: query
+          name: sortBy
+          required: false
+          schema:
+            type: string
+            default: applicationDeadline
+          description: The field by which the result set should be sorted
+        - in: query
+          name: sortDirection
+          required: false
+          schema:
+            type: string
+            default: DESC
+          description: The direction in which the result set should be sorted
       responses:
         '200':
           description: OK
@@ -34,6 +69,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/VacancyResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+
     post:
       summary: Add a new vacancy
       requestBody:

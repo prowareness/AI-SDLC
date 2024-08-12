@@ -52,7 +52,6 @@ public class LoginServiceTest {
     public void validateLogin_shouldReturnFailure_whenEmailDoesNotExist() {
         LoginRequest request = new LoginRequest("nonexistent@devon.nl", "devon123");
         when(loginRepository.findByEmailId("nonexistent@devon.nl")).thenReturn(Optional.empty());
-        when(configuration.getDateTimeFormat()).thenReturn("yyyy-MM-dd HH:mm:ss");
         LoginResponse response = loginService.validateLogin(request);
 
         assertFalse(response.getSuccess());
@@ -68,7 +67,6 @@ public class LoginServiceTest {
         login.setEmailId("john.doe@devon.nl");
         login.setPassword("devon123");
         when(loginRepository.findByEmailId("john.doe@devon.nl")).thenReturn(Optional.of(login));
-        when(configuration.getDateTimeFormat()).thenReturn("yyyy-MM-dd HH:mm:ss");
         LoginResponse response = loginService.validateLogin(request);
 
         assertFalse(response.getSuccess());
