@@ -5,7 +5,6 @@ import com.devon.recruitmentmgmt.model.Login;
 import com.devon.recruitmentmgmt.repository.LoginRepository;
 import com.devon.recruitmentmgmt.to.LoginRequest;
 import com.devon.recruitmentmgmt.to.LoginResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -52,7 +51,6 @@ public class LoginServiceTest {
     public void validateLogin_shouldReturnFailure_whenEmailDoesNotExist() {
         LoginRequest request = new LoginRequest("nonexistent@devon.nl", "devon123");
         when(loginRepository.findByEmailId("nonexistent@devon.nl")).thenReturn(Optional.empty());
-        when(configuration.getDateTimeFormat()).thenReturn("yyyy-MM-dd HH:mm:ss");
         LoginResponse response = loginService.validateLogin(request);
 
         assertFalse(response.getSuccess());
@@ -68,7 +66,6 @@ public class LoginServiceTest {
         login.setEmailId("john.doe@devon.nl");
         login.setPassword("devon123");
         when(loginRepository.findByEmailId("john.doe@devon.nl")).thenReturn(Optional.of(login));
-        when(configuration.getDateTimeFormat()).thenReturn("yyyy-MM-dd HH:mm:ss");
         LoginResponse response = loginService.validateLogin(request);
 
         assertFalse(response.getSuccess());
