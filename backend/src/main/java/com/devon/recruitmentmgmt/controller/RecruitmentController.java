@@ -27,8 +27,8 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
     private final LoginService loginService;
 
     @Override
-    public ResponseEntity<List<VacancyResponse>> apiVacanciesGet() {
-        return null;
+    public ResponseEntity<List<VacancyResponse>> apiVacanciesGet(String createdBy, Integer limit, Integer offset, String sortBy, String sortDirection) {
+        return new ResponseEntity<>(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection), HttpStatus.OK);
     }
 
     @Override

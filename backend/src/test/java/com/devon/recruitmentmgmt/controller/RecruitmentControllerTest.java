@@ -4,6 +4,7 @@ import com.devon.recruitmentmgmt.service.LoginService;
 import com.devon.recruitmentmgmt.service.VacancyService;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
+import com.devon.recruitmentmgmt.to.VacancyResponse;
 import com.devon.recruitmentmgmt.to.LoginRequest;
 import com.devon.recruitmentmgmt.to.LoginResponse;
 import org.apache.catalina.filters.CorsFilter;
@@ -23,6 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -50,15 +54,48 @@ public class RecruitmentControllerTest {
                 .build();
     }
 
-    /*@Test
-    public void testApiVacanciesGet() throws Exception {
-        List<VacancyResponse> mockResponses = Arrays.asList(new VacancyResponse(), new VacancyResponse()); // Populate with test data
-        when(vacancyService.findAllVacancies()).thenReturn(mockResponses);
+    @Test
+    public void apiVacanciesGet_shouldReturnVacancies_whenValidRequest() throws Exception {
+        String createdBy = "john.doe@devon.nl";
+        int limit = 10;
+        int offset = 0;
+        String sortBy = "creationDate";
+        String sortDirection = "DESC";
+        List<VacancyResponse> responses = Arrays.asList();
 
-        mockMvc.perform(get("/api/vacancies"))
+        when(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection)).thenReturn(responses);
+
+        mockMvc.perform(get("/api/vacancies")
+                        .param("createdBy", createdBy)
+                        .param("limit", String.valueOf(limit))
+                        .param("offset", String.valueOf(offset))
+                        .param("sortBy", sortBy)
+                        .param("sortDirection", sortDirection))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(mockResponses)));
-    }*/
+                .andExpect(content().json(objectMapper.writeValueAsString(responses)));
+    }
+
+    @Test
+    public void apiVacanciesGet_shouldReturnEmptyList_whenNoVacanciesFound() throws Exception {
+        String createdBy = "john.doe@devon.nl";
+        int limit = 10;
+        int offset = 0;
+        String sortBy = "creationDate";
+        String sortDirection = "DESC";
+        List<VacancyResponse> responses = Arrays.asList();
+
+        when(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection)).thenReturn(responses);
+
+        mockMvc.perform(get("/api/vacancies")
+                        .param("createdBy", createdBy)
+                        .param("limit", String.valueOf(limit))
+                        .param("offset", String.valueOf(offset))
+                        .param("sortBy", sortBy)
+                        .param("sortDirection", sortDirection))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(responses)));
+    }
+
 
     @Test
     public void testApiVacanciesPost() throws Exception {
