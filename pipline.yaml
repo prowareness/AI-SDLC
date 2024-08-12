@@ -61,10 +61,9 @@ stages:
         steps:
         - task: AzureCLI@2
           inputs:
-            azureSubscription: 'AzureCloud'
-            scriptType: 'bash'
-            scriptPath: |
-              sh ./scripts/deploy.sh
+            azureSubscription: AzureCloud
+            scriptType: bash
+            scriptPath: scripts/deploy.sh
           displayName: "Run Deploy Stage"
 
   - stage: APITests
