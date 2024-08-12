@@ -59,9 +59,13 @@ stages:
     jobs:
       - job: Deploy
         steps:
-          - script: |
+        - task: AzureCLI@2
+          inputs:
+            azureSubscription: 'AzureCloud'
+            scriptType: 'bash'
+          - scriptPath: |
               sh ./scripts/deploy.sh
-            displayName: "Run Deploy Stage"
+          displayName: "Run Deploy Stage"
 
   - stage: APITests
     dependsOn: Deploy
