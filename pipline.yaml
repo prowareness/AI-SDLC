@@ -64,7 +64,7 @@ stages:
     dependsOn: Checkout
     jobs:
       - job: Deploy
-      - steps:
+        steps:
         - task: Bash@3
           inputs:
             targetType: 'inline'
