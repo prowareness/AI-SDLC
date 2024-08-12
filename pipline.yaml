@@ -3,13 +3,6 @@ trigger:
 pool:
   vmImage: "ubuntu-latest"
   
-variables:
-  client_id: $(client_id)
-  client_secret: $(client_secret)
-  subscription_id: $(subscription_id)
-  tenant_id: $(tenant_id)
-
-
 stages:
   - stage: Checkout
     jobs:
@@ -76,7 +69,14 @@ stages:
             backendAzureRmStorageAccountName: aistatefile
             backendAzureRmContainerName: statefile
             backendAzureRmKey: terraform.tfstate
-              
+        - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
+          displayName: 'Terraform : azurerm'
+          inputs:
+            command: apply
+            workingDirectory: IAC
+            environmentServiceNameAzureRM: AzureCloud
+            backendAzureRmUseEnvironmentVariablesForAuthentication: false
+            backendAzureRmUseEntraIdForAuthentication: false    
   - stage: APITests
     dependsOn: Deploy
     jobs:
