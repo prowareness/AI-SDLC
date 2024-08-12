@@ -63,7 +63,7 @@ stages:
           inputs:
             azureSubscription: 'AzureCloud'
             scriptType: 'bash'
-          - scriptPath: |
+            scriptPath: |
               sh ./scripts/deploy.sh
           displayName: "Run Deploy Stage"
 
