@@ -55,7 +55,7 @@ stages:
             displayName: "Run Package Backend Stage"
 
   - stage: Deploy
-    dependsOn: Package
+    dependsOn: Checkout
     jobs:
       - job: Deploy
         steps:
