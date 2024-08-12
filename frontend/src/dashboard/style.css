@@ -1,0 +1,123 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e0e0e0;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar img {
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+}
+
+.user-details {
+  margin-left: 15px;
+}
+
+.user-details h6 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.user-details p {
+  margin: 5px 0 0;
+  color: #bdbdbd;
+}
+
+.create-job-btn {
+  padding: 10px 15px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dashboard-content {
+  margin-bottom: 20px;
+}
+
+.dashboard-content h4 {
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.dashboard-content p {
+  margin: 0;
+  margin-bottom: 20px;
+  color: #757575;
+}
+
+.vacancy-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.vacancy-item {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.vacancy-avatar img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.vacancy-details {
+  flex-grow: 1;
+  margin-left: 15px;
+}
+
+.vacancy-details h6 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.vacancy-details .status {
+  margin: 5px 0 0;
+  color: green;
+}
+
+.vacancy-details .status.closed {
+  color: red;
+}
+
+.vacancy-date {
+  color: #757575;
+}
+
+.total-vacancies {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.total-vacancies h6 {
+  margin: 0;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.total-vacancies h4 {
+  margin: 0;
+  font-size: 24px;
+  color: #3f51b5;
+}
