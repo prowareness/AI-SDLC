@@ -28,14 +28,12 @@ stages:
   - stage: Test
     jobs:
       - job: TestFrontend
-        dependsOn: BuildFrontend
         steps:
           - script: |
               sh ./scripts/test-frontend.sh
             displayName: "Run Test Frontend Stage"
 
       - job: TestBackend
-        dependsOn: BuildBackend
         steps:
           - script: |
               sh ./scripts/test-backend.sh
