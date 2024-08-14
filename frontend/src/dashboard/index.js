@@ -1,7 +1,27 @@
 import React from "react";
 import "./style.css";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const vacancies = [
+    {
+      jobid: "JOB1234",
+      title: "Software Engineer",
+      date: "2022-10-15",
+      status: "Open",
+    },
+    {
+      jobid: "JOB3456",
+      title: "Marketing Specialist",
+      date: "2022-10-10",
+      status: "Closed",
+    },
+  ];
+  const navigate = useNavigate();
+  const handleCreateJobClick = () => {
+    navigate("/create-job");
+  };
+
   return (
     <div className="dashboard-container">
       {/* Header */}
@@ -15,44 +35,51 @@ const Dashboard = () => {
             <p>Welcome to the Job Vacancy Dashboard</p>
           </div>
         </div>
-        <button className="create-job-btn">Create Job Vacancy</button>
+        <button className="create-job-btn" onClick={handleCreateJobClick}>
+          Create Job Vacancy
+        </button>
       </div>
 
       {/* Job Vacancy Dashboard */}
       <div className="dashboard-content">
         <h4>Job Vacancy Dashboard</h4>
         <p>Overview of current job vacancies</p>
-
-        <div className="vacancy-list">
-          <div className="vacancy-item">
-            <div className="vacancy-avatar">
-              <img src="https://via.placeholder.com/40" alt="Job Avatar" />
-            </div>
-            <div className="vacancy-details">
-              <h6>Software Engineer</h6>
-              <p className="status">Open</p>
-            </div>
-            <div className="vacancy-date">Posted on 2022-10-15</div>
-          </div>
-
-          <div className="vacancy-item">
-            <div className="vacancy-avatar">
-              <img src="https://via.placeholder.com/40" alt="Job Avatar" />
-            </div>
-            <div className="vacancy-details">
-              <h6>Marketing Specialist</h6>
-              <p className="status closed">Closed</p>
-            </div>
-            <div className="vacancy-date">Posted on 2022-10-10</div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            margin: "20px 0",
+          }}
+        >
+          <table className="vacancy-table">
+            <thead>
+              <tr>
+                <th>Job Title</th>
+                <th>Status</th>
+                <th>Posted Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vacancies.map((vacancy, index) => (
+                <tr key={index} className="vacancy-item">
+                  <td className="vacancy-details">{vacancy.title}</td>
+                  <td className="vacancy-details">{vacancy.jobid}</td>
+                  <td className="vacancy-date">
+                    {new Date(vacancy.date).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="total-vacancies">
+            <h3>Total Vacancies</h3>
+            <h2>{vacancies.length}</h2>
           </div>
         </div>
       </div>
 
       {/* Total Vacancies */}
-      <div className="total-vacancies">
-        <h6>Total Vacancies</h6>
-        <h4>50</h4>
-      </div>
     </div>
   );
 };
