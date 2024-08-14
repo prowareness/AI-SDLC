@@ -28,6 +28,7 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
 
     @Override
     public ResponseEntity<List<VacancyResponse>> apiVacanciesGet(String createdBy, Integer limit, Integer offset, String sortBy, String sortDirection) {
+        log.info("Hit /api/vacancies with params createdBy: {}, limit: {}, offset: {}, sortBy: {}, sortDirection: {}", createdBy, limit, offset, sortBy, sortDirection);
         return new ResponseEntity<>(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection), HttpStatus.OK);
     }
 
@@ -39,7 +40,8 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
 
     @Override
     public ResponseEntity<VacancyResponse> apiVacanciesVacancyIdGet(String vacancyId) {
-        return null;
+        log.info("Hit /api/vacancies with vacancyID {}", vacancyId);
+        return new ResponseEntity<>(vacancyService.getVacancyById(vacancyId), HttpStatus.OK);
     }
 
     @Override

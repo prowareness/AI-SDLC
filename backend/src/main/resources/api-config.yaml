@@ -51,7 +51,7 @@ paths:
           required: false
           schema:
             type: string
-            default: applicationDeadline
+            default: vacancyId
           description: The field by which the result set should be sorted
         - in: query
           name: sortDirection

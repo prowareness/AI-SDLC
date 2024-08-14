@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class RecruitmentControllerTest {
         int offset = 0;
         String sortBy = "creationDate";
         String sortDirection = "DESC";
-        List<VacancyResponse> responses = Arrays.asList();
+        List<VacancyResponse> responses = List.of();
 
         when(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection)).thenReturn(responses);
 
@@ -82,7 +83,7 @@ public class RecruitmentControllerTest {
         int offset = 0;
         String sortBy = "creationDate";
         String sortDirection = "DESC";
-        List<VacancyResponse> responses = Arrays.asList();
+        List<VacancyResponse> responses = List.of();
 
         when(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection)).thenReturn(responses);
 
@@ -96,6 +97,24 @@ public class RecruitmentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(responses)));
     }
 
+    @Test
+    public void apiVacanciesVacancyIdGet_shouldReturnVacancy_whenValidVacancyId() throws Exception {
+        String vacancyId = "JOB000001";
+        VacancyResponse response = VacancyResponse.builder()
+                .vacancyId(vacancyId)
+                .jobTitle("Software Engineer")
+                .description("Develop software")
+                .requirements("Java, Spring Boot")
+                .location("New York")
+                .maxSalary(BigDecimal.valueOf(120000))
+                .build();
+
+        when(vacancyService.getVacancyById(vacancyId)).thenReturn(response);
+
+        mockMvc.perform(get("/api/vacancies/{vacancyId}", vacancyId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
+    }
 
     @Test
     public void testApiVacanciesPost() throws Exception {
@@ -109,18 +128,6 @@ public class RecruitmentControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
-
-   /* @Test
-    public void testApiVacanciesVacancyIdGet() throws Exception {
-        String vacancyId = "testVacancyId";
-        VacancyResponse response = new VacancyResponse(); // Populate with expected data
-        when(vacancyService.findVacancyById(vacancyId)).thenReturn(response);
-
-        mockMvc.perform(get("/api/vacancies/{vacancyId}", vacancyId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(response)));
-    }*/
-
 
     @Test
     public void testApiLoginPost_Success() throws Exception {

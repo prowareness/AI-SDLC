@@ -78,11 +78,11 @@ public class VacancyService {
         return vacancies.stream().map(this::convertVacancyToVacancyResponse).collect(Collectors.toList());
     }
 
-    /*public VacancyResponse getVacancy(String vacancyId) {
+    public VacancyResponse getVacancyById(String vacancyId) {
         Vacancy vacancy = vacancyRepository.findById(vacancyId)
                 .orElseThrow(() -> new RuntimeException("Vacancy not found with ID: " + vacancyId));
         return convertVacancyToVacancyResponse(vacancy);
-    }*/
+    }
 
     private VacancyResponse convertVacancyToVacancyResponse(Vacancy vacancy) {
         return VacancyResponse.builder()
