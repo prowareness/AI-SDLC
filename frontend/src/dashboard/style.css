@@ -33,13 +33,13 @@
 
 .user-details p {
   margin: 5px 0 0;
-  color: #bdbdbd;
+  color: black;
 }
 
 .create-job-btn {
-  padding: 10px 15px;
-  background-color: #000;
-  color: #fff;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -49,75 +49,29 @@
   margin-bottom: 20px;
 }
 
-.dashboard-content h4 {
-  margin: 0;
-  margin-bottom: 10px;
-  font-size: 24px;
+.vacancy-table {
+  width: 50%;
+  border-collapse: collapse;
 }
 
-.dashboard-content p {
-  margin: 0;
-  margin-bottom: 20px;
-  color: #757575;
+.vacancy-table th,
+.vacancy-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
 }
 
-.vacancy-list {
-  display: flex;
-  flex-direction: column;
+.vacancy-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
 }
 
-.vacancy-item {
-  display: flex;
-  align-items: center;
-  background-color: #f5f5f5;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-.vacancy-avatar img {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-}
-
-.vacancy-details {
-  flex-grow: 1;
-  margin-left: 15px;
-}
-
-.vacancy-details h6 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.vacancy-details .status {
-  margin: 5px 0 0;
-  color: green;
-}
-
-.vacancy-details .status.closed {
-  color: red;
-}
-
-.vacancy-date {
-  color: #757575;
+.vacancy-item:hover {
+  background-color: #f9f9f9;
 }
 
 .total-vacancies {
-  background-color: #f5f5f5;
-  padding: 20px;
-  border-radius: 5px;
-}
-
-.total-vacancies h6 {
-  margin: 0;
-  margin-bottom: 5px;
-  font-size: 18px;
-}
-
-.total-vacancies h4 {
-  margin: 0;
-  font-size: 24px;
-  color: #3f51b5;
+  width: 50%;
+  align-items: center;
+  padding: 10px;
 }
