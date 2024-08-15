@@ -46,7 +46,7 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
 
     @Override
     public ResponseEntity<LoginResponse> apiLoginPost(LoginRequest loginRequest) {
-        log.info("Hit /api/login with RequestBody {}", loginRequest.toString());
+        log.info("Hit /api/login with username - {}", loginRequest.getEmailId().toString());
         com.devon.recruitmentmgmt.to.LoginResponse response = loginService.validateLogin(loginRequest);
         if (response.getSuccess()) {
             return new ResponseEntity<>(response, HttpStatus.OK);
