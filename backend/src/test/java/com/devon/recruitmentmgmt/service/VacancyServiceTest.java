@@ -6,6 +6,7 @@ import com.devon.recruitmentmgmt.repository.VacancyRepository;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
 import com.devon.recruitmentmgmt.to.VacancyResponse;
+import com.devon.recruitmentmgmt.to.VacancyListResponse;
 import com.devon.recruitmentmgmt.validation.VacancyRequestValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -125,10 +126,10 @@ public class VacancyServiceTest {
         when(vacancyRepository.findVacanciesByCreatedBy(createdBy, pageable)).thenReturn(vacancies);
 
         // When
-        List<VacancyResponse> responses = vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection);
+        VacancyListResponse responses = vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection);
 
         // Then
-        assertEquals(2, responses.size());
+        assertEquals(2, responses.getVacancies().size());
     }
 
     @Test
@@ -170,5 +171,19 @@ public class VacancyServiceTest {
 
         // When & Then
         assertThrows(RuntimeException.class, () -> vacancyService.getVacancyById(vacancyId));
+    }
+
+    @Test
+    public void getTotalVacanciesCountByCreatedBy_shouldReturnCorrectCount() {
+        // Given
+        String createdBy = "john.doe@devon.nl";
+        long expectedCount = 5;
+        when(vacancyRepository.countVacanciesByCreatedBy(createdBy)).thenReturn(expectedCount);
+
+        // When
+        long actualCount = vacancyService.getTotalVacanciesCountByCreatedBy(createdBy);
+
+        // Then
+        assertEquals(expectedCount, actualCount);
     }
 }
