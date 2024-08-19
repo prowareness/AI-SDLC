@@ -1,24 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
   testDir: "./tests",
-  fullyParallel: true,
+  fullyParallel: false,  // Set to false to run tests sequentially
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: "http://13.90.114.134:8080",
+    baseURL: "http://172.178.36.195:8080/vacancy/",
     trace: "on-first-retry",
     ignoreHTTPSErrors: true,
     screenshot: "only-on-failure",
@@ -26,11 +16,16 @@ export default defineConfig({
     headless: false,
   },
 
-  /* Configure projects for major browsers */
   projects: [
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
   ],
+
+  // Store custom data such as username and password in a separate object
+  metadata: {
+    username: 'john.doe@devon.nl',
+    password: 'devon123',
+  },
 });

@@ -2,9 +2,9 @@ import { Page } from "@playwright/test";
 
 class DashboardPage {
   private page: Page;
-  private createJobButton;
-  private vacancyTable;
-  private totalVacancies;
+  public createJobButton;
+  public vacancyTable;
+  public totalVacancies;
 
   constructor(page: Page) {
     this.page = page;

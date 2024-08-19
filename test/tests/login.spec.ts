@@ -2,56 +2,54 @@ import { test, expect } from "@playwright/test";
 import { LoginFormPage } from "../pages/loginForm";
 
 test.describe("Login Form", () => {
-  test("Successful login", async ({ page }) => {
-    const loginFormPage = new LoginFormPage(page);
+    test("Successful login", async ({ page, baseURL }) => {
+        const loginFormPage = new LoginFormPage(page);
+        
+        // Access the username and password from the config's metadata object
+        const username = test.info().config.metadata.username;
+        const password = test.info().config.metadata.password;
+        
+        // Navigate to the baseURL or a fallback path
+        await page.goto(baseURL || '/');  // Fallback to /vacancy/ if baseURL isn't defined
+        
+        // Fill in the login form
+        await loginFormPage.fillUsername(username);
+        await loginFormPage.fillPassword(password);
+        await loginFormPage.submitForm();
+        
+        // Validate that the current URL contains the word "dashboard"
+        await expect(page).toHaveURL(/dashboard/);
+    });
 
-    // Navigate to the login page
-    await page.goto("/login");
+    test("Login with incorrect credentials", async ({ page, baseURL }) => {
+        const loginFormPage = new LoginFormPage(page);
 
-    // Fill in the login form
-    await loginFormPage.fillUsername("validUsername");
-    await loginFormPage.fillPassword("validPassword");
+        // Navigate to the baseURL or a fallback path
+        await page.goto(baseURL || '/');  // Fallback to /vacancy/ if baseURL isn't defined
 
-    // Submit the form
-    await loginFormPage.submitForm();
+        // Fill in the login form with incorrect credentials
+        await loginFormPage.fillUsername("invalidUsername");
+        await loginFormPage.fillPassword("invalidPassword");
 
-    // Verify successful login
-    await expect(page).toHaveURL("/dashboard");
-    const welcomeMessage = await page.textContent(".welcome-message");
-    expect(welcomeMessage).toContain("Welcome, validUsername");
-  });
+        // Submit the form
+        await loginFormPage.submitForm();
 
-  test("Login with incorrect credentials", async ({ page }) => {
-    const loginFormPage = new LoginFormPage(page);
+        // Verify error message
+        const errorMessage = await page.textContent(".error-message");
+        expect(errorMessage).toContain("Please enter a valid email address");
+    });
 
-    // Navigate to the login page
-    await page.goto("/login");
+    test("Login with empty fields", async ({ page, baseURL }) => {
+        const loginFormPage = new LoginFormPage(page);
 
-    // Fill in the login form with incorrect credentials
-    await loginFormPage.fillUsername("invalidUsername");
-    await loginFormPage.fillPassword("invalidPassword");
+        // Navigate to the baseURL or a fallback path
+        await page.goto(baseURL || '/');  // Fallback to /vacancy/ if baseURL isn't defined
 
-    // Submit the form
-    await loginFormPage.submitForm();
+        // Submit the form without filling in any details
+        await loginFormPage.submitForm();
 
-    // Verify error message
-    const errorMessage = await page.textContent(".error-message");
-    expect(errorMessage).toContain("Invalid username or password");
-  });
-
-  test("Login with empty fields", async ({ page }) => {
-    const loginFormPage = new LoginFormPage(page);
-
-    // Navigate to the login page
-    await page.goto("/login");
-
-    // Submit the form without filling in any details
-    await loginFormPage.submitForm();
-
-    // Verify error messages for empty fields
-    const usernameError = await page.textContent("#username-error");
-    const passwordError = await page.textContent("#password-error");
-    expect(usernameError).toContain("Username cannot be empty");
-    expect(passwordError).toContain("Password cannot be empty");
-  });
+        // Verify error messages for empty fields
+        const errorMessage = await page.textContent(".error-message");
+        expect(errorMessage).toContain("Username is required");
+    });
 });

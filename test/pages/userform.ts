@@ -10,6 +10,7 @@ class UserFormPage {
   private applicationDeadlineInput;
   private saveButton;
   private confirmationDialog;
+  private closeButton;
 
   constructor(page: Page) {
     this.page = page;
@@ -20,7 +21,8 @@ class UserFormPage {
     this.salaryRangeInput = page.locator("#max-salary");
     this.applicationDeadlineInput = page.locator("#last-date");
     this.saveButton = page.locator("button", { hasText: "Submit" });
-    this.confirmationDialog = page.locator("text=Vacancy created successfully"); // Adjust locator if needed
+    this.confirmationDialog = page.locator("#alert-dialog-description"); // Adjust locator if needed
+    this.closeButton = page.locator("text=Close"); // Adjust locator if needed
   }
 
   async fillJobTitle(title: string) {
@@ -57,8 +59,7 @@ class UserFormPage {
   }
 
   async closeDialog() {
-    const closeButton = this.page.locator("text=Close"); // Adjust locator if needed
-    await closeButton.click();
+    await this.closeButton.click();
   }
 }
 
