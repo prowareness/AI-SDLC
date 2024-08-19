@@ -4,6 +4,7 @@ import com.devon.recruitmentmgmt.service.LoginService;
 import com.devon.recruitmentmgmt.service.VacancyService;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
+import com.devon.recruitmentmgmt.to.VacancyListResponse;
 import com.devon.recruitmentmgmt.to.VacancyResponse;
 import com.devon.recruitmentmgmt.to.LoginRequest;
 import com.devon.recruitmentmgmt.to.LoginResponse;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,15 +57,21 @@ public class RecruitmentControllerTest {
     }
 
     @Test
-    public void apiVacanciesGet_shouldReturnVacancies_whenValidRequest() throws Exception {
+    public void apiVacanciesGet_shouldReturnVacanciesWithCount_whenValidRequest() throws Exception {
         String createdBy = "john.doe@devon.nl";
         int limit = 10;
         int offset = 0;
         String sortBy = "creationDate";
         String sortDirection = "DESC";
-        List<VacancyResponse> responses = Arrays.asList();
+        List<VacancyResponse> responses = Arrays.asList(
+                VacancyResponse.builder().vacancyId("JOB000001").jobTitle("Software Engineer").build(),
+                VacancyResponse.builder().vacancyId("JOB000002").jobTitle("Data Scientist").build()
+        );
+        long totalCount = 2;
 
-        when(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection)).thenReturn(responses);
+        VacancyListResponse vacancyListResponse = VacancyListResponse.builder().vacancies(responses).total(totalCount).build();
+
+        when(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection)).thenReturn(vacancyListResponse);
 
         mockMvc.perform(get("/api/vacancies")
                         .param("createdBy", createdBy)
@@ -72,19 +80,22 @@ public class RecruitmentControllerTest {
                         .param("sortBy", sortBy)
                         .param("sortDirection", sortDirection))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(responses)));
+                .andExpect(content().json(objectMapper.writeValueAsString(vacancyListResponse)));
     }
 
     @Test
-    public void apiVacanciesGet_shouldReturnEmptyList_whenNoVacanciesFound() throws Exception {
+    public void apiVacanciesGet_shouldReturnEmptyListWithCountZero_whenNoVacanciesFound() throws Exception {
         String createdBy = "john.doe@devon.nl";
         int limit = 10;
         int offset = 0;
         String sortBy = "creationDate";
         String sortDirection = "DESC";
         List<VacancyResponse> responses = Arrays.asList();
+        long totalCount = 0;
 
-        when(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection)).thenReturn(responses);
+        VacancyListResponse vacancyListResponse = VacancyListResponse.builder().vacancies(responses).total(totalCount).build();
+
+        when(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection)).thenReturn(vacancyListResponse);
 
         mockMvc.perform(get("/api/vacancies")
                         .param("createdBy", createdBy)
@@ -93,9 +104,28 @@ public class RecruitmentControllerTest {
                         .param("sortBy", sortBy)
                         .param("sortDirection", sortDirection))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(responses)));
+                .andExpect(content().json(objectMapper.writeValueAsString(vacancyListResponse)));
     }
 
+
+    @Test
+    public void apiVacanciesVacancyIdGet_shouldReturnVacancy_whenValidVacancyId() throws Exception {
+        String vacancyId = "JOB000001";
+        VacancyResponse response = VacancyResponse.builder()
+                .vacancyId(vacancyId)
+                .jobTitle("Software Engineer")
+                .description("Develop software")
+                .requirements("Java, Spring Boot")
+                .location("New York")
+                .maxSalary(BigDecimal.valueOf(120000))
+                .build();
+
+        when(vacancyService.getVacancyById(vacancyId)).thenReturn(response);
+
+        mockMvc.perform(get("/api/vacancies/{vacancyId}", vacancyId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
+    }
 
     @Test
     public void testApiVacanciesPost() throws Exception {
@@ -109,18 +139,6 @@ public class RecruitmentControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
-
-   /* @Test
-    public void testApiVacanciesVacancyIdGet() throws Exception {
-        String vacancyId = "testVacancyId";
-        VacancyResponse response = new VacancyResponse(); // Populate with expected data
-        when(vacancyService.findVacancyById(vacancyId)).thenReturn(response);
-
-        mockMvc.perform(get("/api/vacancies/{vacancyId}", vacancyId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(response)));
-    }*/
-
 
     @Test
     public void testApiLoginPost_Success() throws Exception {

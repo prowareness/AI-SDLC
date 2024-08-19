@@ -6,6 +6,7 @@ import com.devon.recruitmentmgmt.repository.VacancyRepository;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
 import com.devon.recruitmentmgmt.to.VacancyResponse;
+import com.devon.recruitmentmgmt.to.VacancyListResponse;
 import com.devon.recruitmentmgmt.validation.VacancyRequestValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -124,9 +126,64 @@ public class VacancyServiceTest {
         when(vacancyRepository.findVacanciesByCreatedBy(createdBy, pageable)).thenReturn(vacancies);
 
         // When
-        List<VacancyResponse> responses = vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection);
+        VacancyListResponse responses = vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection);
 
         // Then
-        assertEquals(2, responses.size());
+        assertEquals(2, responses.getVacancies().size());
+    }
+
+    @Test
+    public void getVacancyById_shouldReturnVacancyResponse_whenValidVacancyId() {
+        // Given
+        String vacancyId = "JOB000001";
+        Vacancy vacancy = Vacancy.builder()
+                .vacancyId(vacancyId)
+                .jobTitle("Software Engineer")
+                .description("Develop software")
+                .requirements("Java, Spring Boot")
+                .location("New York")
+                .maxSalary(BigDecimal.valueOf(120000))
+                .applicationDeadline(LocalDateTime.now().plusDays(30))
+                .createdBy("john.doe@devon.nl")
+                .creationDate(LocalDateTime.now())
+                .build();
+
+        when(vacancyRepository.findById(vacancyId)).thenReturn(Optional.of(vacancy));
+
+        // When
+        VacancyResponse response = vacancyService.getVacancyById(vacancyId);
+
+        // Then
+        assertEquals(vacancyId, response.getVacancyId());
+        assertEquals("Software Engineer", response.getJobTitle());
+        assertEquals("Develop software", response.getDescription());
+        assertEquals("Java, Spring Boot", response.getRequirements());
+        assertEquals("New York", response.getLocation());
+        assertEquals(BigDecimal.valueOf(120000), response.getMaxSalary());
+        assertEquals("john.doe@devon.nl", response.getCreatedBy());
+    }
+
+    @Test
+    public void getVacancyById_shouldThrowException_whenInvalidVacancyId() {
+        // Given
+        String vacancyId = "INVALID_ID";
+        when(vacancyRepository.findById(vacancyId)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(RuntimeException.class, () -> vacancyService.getVacancyById(vacancyId));
+    }
+
+    @Test
+    public void getTotalVacanciesCountByCreatedBy_shouldReturnCorrectCount() {
+        // Given
+        String createdBy = "john.doe@devon.nl";
+        long expectedCount = 5;
+        when(vacancyRepository.countVacanciesByCreatedBy(createdBy)).thenReturn(expectedCount);
+
+        // When
+        long actualCount = vacancyService.getTotalVacanciesCountByCreatedBy(createdBy);
+
+        // Then
+        assertEquals(expectedCount, actualCount);
     }
 }

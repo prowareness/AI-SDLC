@@ -52,8 +52,16 @@ dependencies {
     implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     implementation("org.openapitools:openapi-generator-gradle-plugin:7.0.0")
-
+    implementation 'org.slf4j:slf4j-api:2.0.11'
+    implementation 'org.slf4j:slf4j-simple:2.0.11'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    configurations {
+        all {
+            exclude group: 'ch.qos.logback', module: 'logback-classic'
+            exclude group: 'ch.qos.logback', module: 'logback-core'
+        }
+    }
 }
 
 openApiGenerate {

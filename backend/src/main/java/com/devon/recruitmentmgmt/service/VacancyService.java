@@ -7,6 +7,7 @@ import com.devon.recruitmentmgmt.util.DateTimeUtil;
 import com.devon.recruitmentmgmt.validation.VacancyRequestValidator;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
+import com.devon.recruitmentmgmt.to.VacancyListResponse;
 import com.devon.recruitmentmgmt.to.VacancyResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -67,22 +68,25 @@ public class VacancyService {
         }
     }
 
-    public List<VacancyResponse> getVacanciesCreatedByRecruiter(String createdBy, Integer limit, Integer offset, String sortBy, String sortDirection) {
+    public VacancyListResponse getVacanciesCreatedByRecruiter(String createdBy, Integer limit, Integer offset, String sortBy, String sortDirection) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(offset, limit, sort);
-        List<Vacancy> vacancies = vacancyRepository.findVacanciesByCreatedBy(createdBy, pageable);
-        return generateVacancyResponseList(vacancies);
+        //List<Vacancy> vacancies = vacancyRepository.findVacanciesByCreatedBy(createdBy, pageable);
+        List<VacancyResponse> vacancies = generateVacancyResponseList(createdBy, pageable);
+        long totalVacancies = vacancyRepository.countVacanciesByCreatedBy(createdBy);
+        return VacancyListResponse.builder().vacancies(vacancies).total(totalVacancies).build();
     }
 
-    private List<VacancyResponse> generateVacancyResponseList(List<Vacancy> vacancies) {
+    private List<VacancyResponse> generateVacancyResponseList(String createdBy, Pageable pageable) {
+        List<Vacancy> vacancies = vacancyRepository.findVacanciesByCreatedBy(createdBy, pageable);
         return vacancies.stream().map(this::convertVacancyToVacancyResponse).collect(Collectors.toList());
     }
 
-    /*public VacancyResponse getVacancy(String vacancyId) {
+    public VacancyResponse getVacancyById(String vacancyId) {
         Vacancy vacancy = vacancyRepository.findById(vacancyId)
                 .orElseThrow(() -> new RuntimeException("Vacancy not found with ID: " + vacancyId));
         return convertVacancyToVacancyResponse(vacancy);
-    }*/
+    }
 
     private VacancyResponse convertVacancyToVacancyResponse(Vacancy vacancy) {
         return VacancyResponse.builder()
@@ -95,6 +99,10 @@ public class VacancyService {
                 .applicationDeadline(DateTimeUtil.convertLocalDateToDate(vacancy.getApplicationDeadline()))
                 .createdBy(vacancy.getCreatedBy())
                 .build();
+    }
+
+    public long getTotalVacanciesCountByCreatedBy(String createdBy) {
+        return vacancyRepository.countVacanciesByCreatedBy(createdBy);
     }
 
 }

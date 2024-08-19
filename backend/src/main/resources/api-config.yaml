@@ -51,7 +51,7 @@ paths:
           required: false
           schema:
             type: string
-            default: applicationDeadline
+            default: vacancyId
           description: The field by which the result set should be sorted
         - in: query
           name: sortDirection
@@ -66,9 +66,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/VacancyResponse'
+                $ref: '#/components/schemas/VacancyListResponse'
         '400':
           description: Bad request
         '404':
@@ -91,6 +89,7 @@ paths:
                 $ref: '#/components/schemas/CreateVacancyResponse'
         '400':
           description: Bad request
+
   /api/vacancies/{vacancyId}:
     get:
       summary: Get a specific vacancy by ID
@@ -206,3 +205,14 @@ components:
         vacancyId:
           type: string
           example: JOB000001
+
+    VacancyListResponse:
+      type: object
+      properties:
+        vacancies:
+         type: array
+         items:
+           $ref: '#/components/schemas/VacancyResponse'
+        total:
+         type: long
+         example: 5
