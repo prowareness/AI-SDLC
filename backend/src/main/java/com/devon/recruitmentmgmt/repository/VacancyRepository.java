@@ -15,6 +15,10 @@ public interface VacancyRepository extends JpaRepository<Vacancy, String> {
 
     Optional<Vacancy> findById(String vacancyId);
 
-    @Query(value = "SELECT v FROM Vacancy v WHERE v.createdBy = :createdBy ORDER BY v.createdBy, v.vacancyId DESC")
+    @Query(value = "SELECT v FROM Vacancy v WHERE v.createdBy = :createdBy")
     List<Vacancy> findVacanciesByCreatedBy(@Param("createdBy") String createdBy, Pageable pageable);
+
+    @Query("SELECT COUNT(v) FROM Vacancy v WHERE v.createdBy = :createdBy")
+    long countVacanciesByCreatedBy(@Param("createdBy") String createdBy);
+
 }

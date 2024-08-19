@@ -4,6 +4,7 @@ import com.devon.recruitmentmgmt.service.LoginService;
 import com.devon.recruitmentmgmt.service.VacancyService;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
+import com.devon.recruitmentmgmt.to.VacancyListResponse;
 import com.devon.recruitmentmgmt.to.VacancyResponse;
 import com.devon.recruitmentmgmt.to.LoginResponse;
 import com.devon.recruitmentmgmt.to.LoginRequest;
@@ -27,7 +28,7 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
     private final LoginService loginService;
 
     @Override
-    public ResponseEntity<List<VacancyResponse>> apiVacanciesGet(String createdBy, Integer limit, Integer offset, String sortBy, String sortDirection) {
+    public ResponseEntity<VacancyListResponse> apiVacanciesGet(String createdBy, Integer limit, Integer offset, String sortBy, String sortDirection) {
         log.info("Hit /api/vacancies with params createdBy: {}, limit: {}, offset: {}, sortBy: {}, sortDirection: {}", createdBy, limit, offset, sortBy, sortDirection);
         return new ResponseEntity<>(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection), HttpStatus.OK);
     }
