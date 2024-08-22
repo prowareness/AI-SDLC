@@ -1,9 +1,9 @@
 trigger:
-  - Main
+  - main
 
 pool:
   vmImage: "ubuntu-latest"
-
+  
 stages:
   - stage: Checkout
     jobs:
@@ -55,14 +55,29 @@ stages:
             displayName: "Run Package Backend Stage"
 
   - stage: Deploy
-    dependsOn: Package
+    dependsOn: Checkout
     jobs:
       - job: Deploy
         steps:
-          - script: |
-              sh ./scripts/deploy.sh
-            displayName: "Run Deploy Stage"
-
+        - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
+          displayName: 'Terraform : azurerm'
+          inputs:
+            workingDirectory: IAC
+            backendAzureRmUseEnvironmentVariablesForAuthentication: false
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: AzureCloud
+            backendAzureRmResourceGroupName: AISDLC
+            backendAzureRmStorageAccountName: aistatefile
+            backendAzureRmContainerName: statefile
+            backendAzureRmKey: terraform.tfstate
+        - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
+          displayName: 'Terraform : azurerm'
+          inputs:
+            command: apply
+            workingDirectory: IAC
+            environmentServiceNameAzureRM: AzureCloud
+            backendAzureRmUseEnvironmentVariablesForAuthentication: false
+            backendAzureRmUseEntraIdForAuthentication: false    
   - stage: APITests
     dependsOn: Deploy
     jobs:

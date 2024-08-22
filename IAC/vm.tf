@@ -77,6 +77,23 @@ resource "azurerm_public_ip" "aisdlc_public_ip" {
   allocation_method   = "Dynamic"
 }
 
+resource "tls_private_key" "ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "azurerm_key_vault_secret" "ssh_private_key" {
+  name         = "AISDLC-ssh-private-key"
+  value        = tls_private_key.ssh_key.private_key_pem
+  key_vault_id = "/subscriptions/434d9ccf-0fbf-4203-a25a-314f7650f6f7/resourceGroups/AISDLC/providers/Microsoft.KeyVault/vaults/AISDLC"
+}
+
+resource "azurerm_key_vault_secret" "ssh_public_key" {
+  name         = "AISDLC-ssh-public-key"
+  value        = tls_private_key.ssh_key.public_key_openssh
+  key_vault_id = "/subscriptions/434d9ccf-0fbf-4203-a25a-314f7650f6f7/resourceGroups/AISDLC/providers/Microsoft.KeyVault/vaults/AISDLC"
+}
+
 # Create a virtual machine
 resource "azurerm_linux_virtual_machine" "aisdlc_vm" {
   name                = "SDLC-vm"
@@ -90,7 +107,7 @@ resource "azurerm_linux_virtual_machine" "aisdlc_vm" {
 
   admin_ssh_key {
     username   = "adminuser"
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = azurerm_key_vault_secret.ssh_public_key.value
   }
 
   os_disk {

@@ -19,7 +19,7 @@ source /etc/profile
 
 # Download Tomcat 10
 echo "Downloading Tomcat 10..."
-TOMCAT_VERSION=10.0.27
+TOMCAT_VERSION=10.1.28
 wget https://downloads.apache.org/tomcat/tomcat-10/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 # Extract Tomcat
