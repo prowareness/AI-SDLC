@@ -2,13 +2,17 @@
   "name": "test",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "install:browsers": "npx playwright install",
+    "test": "playwright test"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.45.2",
-    "@types/node": "^20.14.11"
+    "@types/node": "^20.14.11",
+    "moment": "^2.30.1"
   },
   "directories": {
     "test": "tests"

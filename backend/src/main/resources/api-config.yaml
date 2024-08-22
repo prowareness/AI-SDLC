@@ -3,18 +3,75 @@ info:
   title: Recruitment API
   version: 1.0.0
 paths:
-  /api/vacancies:
-    get:
-      summary: Get all vacancies
+  /api/login:
+    post:
+      summary: Validate login credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/VacancyResponse'
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Unauthorized
+
+  /api/vacancies:
+    get:
+      summary: Get all vacancies
+      parameters:
+        - in: query
+          name: createdBy
+          required: true
+          schema:
+            type: string
+          description: Email of the user who created the vacancies
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            default: 5
+          description: Maximum number of vacancies to return
+        - in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+            default: 0
+          description: Number of vacancies to skip before starting to collect the result set
+        - in: query
+          name: sortBy
+          required: false
+          schema:
+            type: string
+            default: vacancyId
+          description: The field by which the result set should be sorted
+        - in: query
+          name: sortDirection
+          required: false
+          schema:
+            type: string
+            default: DESC
+          description: The direction in which the result set should be sorted
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VacancyListResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+
     post:
       summary: Add a new vacancy
       requestBody:
@@ -32,6 +89,7 @@ paths:
                 $ref: '#/components/schemas/CreateVacancyResponse'
         '400':
           description: Bad request
+
   /api/vacancies/{vacancyId}:
     get:
       summary: Get a specific vacancy by ID
@@ -53,6 +111,29 @@ paths:
 
 components:
   schemas:
+    LoginRequest:
+      type: object
+      required:
+        - emailId
+        - password
+      properties:
+        emailId:
+          type: string
+          example: john.doe@devon.nl
+        password:
+          type: string
+          example: devon123
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Login successful"
+
     VacancyResponse:
       type: object
       properties:
@@ -124,3 +205,14 @@ components:
         vacancyId:
           type: string
           example: JOB000001
+
+    VacancyListResponse:
+      type: object
+      properties:
+        vacancies:
+         type: array
+         items:
+           $ref: '#/components/schemas/VacancyResponse'
+        total:
+         type: long
+         example: 5

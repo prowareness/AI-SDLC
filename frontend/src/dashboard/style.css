@@ -1,0 +1,77 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e0e0e0;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar img {
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+}
+
+.user-details {
+  margin-left: 15px;
+}
+
+.user-details h6 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.user-details p {
+  margin: 5px 0 0;
+  color: black;
+}
+
+.create-job-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dashboard-content {
+  margin-bottom: 20px;
+}
+
+.vacancy-table {
+  width: 50%;
+  border-collapse: collapse;
+}
+
+.vacancy-table th,
+.vacancy-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.vacancy-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.vacancy-item:hover {
+  background-color: #f9f9f9;
+}
+
+.total-vacancies {
+  width: 50%;
+  align-items: center;
+  padding: 10px;
+}

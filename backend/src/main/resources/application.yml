@@ -1,6 +1,8 @@
 spring:
   datasource:
-    url: jdbc:sqlite:recruitment.db
+    #url: jdbc:sqlite:recruitment.db
+    #url: jdbc:sqlite:/opt/tomcat/logs/recruitment.db
+    url: jdbc:sqlite:/opt/database/recruitment.db
     driver-class-name: org.sqlite.JDBC
     hikari:
       maximum-pool-size: 1
@@ -15,6 +17,7 @@ spring:
 configuration :
   defaultJobId: JOB000001
   formatJobId : JOB%06d
+  dateTimeFormat: yyyy-MM-dd HH:mm:ss
 
 server:
   port : 8080

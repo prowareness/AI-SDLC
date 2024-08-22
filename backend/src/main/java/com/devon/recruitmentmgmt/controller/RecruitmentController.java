@@ -1,9 +1,13 @@
 package com.devon.recruitmentmgmt.controller;
 
+import com.devon.recruitmentmgmt.service.LoginService;
 import com.devon.recruitmentmgmt.service.VacancyService;
 import com.devon.recruitmentmgmt.to.CreateVacancyRequest;
 import com.devon.recruitmentmgmt.to.CreateVacancyResponse;
+import com.devon.recruitmentmgmt.to.VacancyListResponse;
 import com.devon.recruitmentmgmt.to.VacancyResponse;
+import com.devon.recruitmentmgmt.to.LoginResponse;
+import com.devon.recruitmentmgmt.to.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,10 +25,12 @@ import java.util.List;
 public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiApi {
 
     private final VacancyService vacancyService;
+    private final LoginService loginService;
 
     @Override
-    public ResponseEntity<List<VacancyResponse>> apiVacanciesGet() {
-        return null;
+    public ResponseEntity<VacancyListResponse> apiVacanciesGet(String createdBy, Integer limit, Integer offset, String sortBy, String sortDirection) {
+        log.info("Hit /api/vacancies with params createdBy: {}, limit: {}, offset: {}, sortBy: {}, sortDirection: {}", createdBy, limit, offset, sortBy, sortDirection);
+        return new ResponseEntity<>(vacancyService.getVacanciesCreatedByRecruiter(createdBy, limit, offset, sortBy, sortDirection), HttpStatus.OK);
     }
 
     @Override
@@ -35,6 +41,18 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
 
     @Override
     public ResponseEntity<VacancyResponse> apiVacanciesVacancyIdGet(String vacancyId) {
-        return null;
+        log.info("Hit /api/vacancies with vacancyID {}", vacancyId);
+        return new ResponseEntity<>(vacancyService.getVacancyById(vacancyId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<LoginResponse> apiLoginPost(LoginRequest loginRequest) {
+        log.info("Hit /api/login with username - {}", loginRequest.getEmailId().toString());
+        com.devon.recruitmentmgmt.to.LoginResponse response = loginService.validateLogin(loginRequest);
+        if (response.getSuccess()) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
     }
 }

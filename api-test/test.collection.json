@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "fb7f23cc-d075-48e5-8b61-20ebfcb8820c",
+		"name": "Recruitment API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1931305"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "vacancies",
+					"item": [
+						{
+							"name": "{vacancyId}",
+							"item": [
+								{
+									"name": "Get a specific vacancy by ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/vacancies/:vacancyId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"vacancies",
+												":vacancyId"
+											],
+											"variable": [
+												{
+													"key": "vacancyId",
+													"value": "deserunt nulla Ut ips",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/vacancies/:vacancyId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"vacancies",
+														":vacancyId"
+													],
+													"variable": [
+														{
+															"key": "vacancyId"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"vacancyId\": \"JOB000001\",\n  \"jobTitle\": \"Developer\",\n  \"description\": \"Looking for a Java developer\",\n  \"requirements\": \"Must be having hands experience in Java\",\n  \"location\": \"Bangalore\",\n  \"maxSalary\": 10000000.23,\n  \"applicationDeadline\": \"2024-12-31T23:59:59\",\n  \"createdBy\": \"john.doe@devon.nl\"\n}"
+										},
+										{
+											"name": "Not Found",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/vacancies/:vacancyId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"vacancies",
+														":vacancyId"
+													],
+													"variable": [
+														{
+															"key": "vacancyId"
+														}
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Get all vacancies",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/vacancies",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"vacancies"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/vacancies",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"vacancies"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"vacancyId\": \"JOB000001\",\n    \"jobTitle\": \"Developer\",\n    \"description\": \"Looking for a Java developer\",\n    \"requirements\": \"Must be having hands experience in Java\",\n    \"location\": \"Bangalore\",\n    \"maxSalary\": 10000000.23,\n    \"applicationDeadline\": \"2024-12-31T23:59:59\",\n    \"createdBy\": \"john.doe@devon.nl\"\n  },\n  {\n    \"vacancyId\": \"JOB000001\",\n    \"jobTitle\": \"Developer\",\n    \"description\": \"Looking for a Java developer\",\n    \"requirements\": \"Must be having hands experience in Java\",\n    \"location\": \"Bangalore\",\n    \"maxSalary\": 10000000.23,\n    \"applicationDeadline\": \"2024-12-31T23:59:59\",\n    \"createdBy\": \"john.doe@devon.nl\"\n  }\n]"
+								}
+							]
+						},
+						{
+							"name": "Add a new vacancy",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"jobTitle\": \"Developer\",\n  \"description\": \"Looking for a Java developer\",\n  \"requirements\": \"Must be having hands-on experience in Java\",\n  \"location\": \"Bangalore\",\n  \"maxSalary\": 10000000.23,\n  \"applicationDeadline\": \"2024-12-31T23:59:59\",\n  \"createdBy\": \"john.doe@devon.nl\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/vacancies",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"vacancies"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Created",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"jobTitle\": \"Developer\",\n  \"description\": \"Looking for a Java developer\",\n  \"requirements\": \"Must be having hands-on experience in Java\",\n  \"location\": \"Bangalore\",\n  \"maxSalary\": 10000000.23,\n  \"applicationDeadline\": \"2024-12-31T23:59:59\",\n  \"createdBy\": \"john.doe@devon.nl\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/vacancies",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"vacancies"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"vacancyId\": \"JOB000001\"\n}"
+								},
+								{
+									"name": "Bad request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"jobTitle\": \"Developer\",\n  \"description\": \"Looking for a Java developer\",\n  \"requirements\": \"Must be having hands-on experience in Java\",\n  \"location\": \"Bangalore\",\n  \"maxSalary\": 10000000.23,\n  \"applicationDeadline\": \"2024-12-31T23:59:59\",\n  \"createdBy\": \"john.doe@devon.nl\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/vacancies",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"vacancies"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "/"
+		}
+	]
+}
