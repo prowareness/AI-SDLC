@@ -20,6 +20,8 @@ import {
 import { Close as CloseIcon } from "@mui/icons-material";
 import Homepage from "../vacancy";
 import axios from "axios";
+import Dashboard from "../dashboard";
+import { useNavigate } from "react-router-dom";
 
 function UserForm() {
   const [showHomePage, setShowHomePage] = useState(false);
@@ -27,6 +29,7 @@ function UserForm() {
   const [open, setOpen] = useState(false);
   const [vacancyId, setVacancyId] = useState("");
   let response;
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     jobTitle: "",
@@ -115,11 +118,11 @@ function UserForm() {
     );
     if (areAllErrorsFalse() && isAtLeastOneFieldNotEmpty) {
       formData.applicationDeadline += "T00:00:00";
-      formData.createdBy = "joe@devon.nl";
+      formData.createdBy = "john.doe@devon.nl";
 
       try {
         response = await axios.post(
-          "http://13.90.114.134:8080/backend/api/vacancies",
+          "http://172.190.178.164:8080/recruitment/api/vacancies",
           formData
         );
         console.log("Response:", response);
@@ -278,7 +281,7 @@ function UserForm() {
           </Button>
         </DialogActions>
       </Dialog>
-      {showHomePage && <Homepage />}
+      {showHomePage && navigate("/dashboard")}
     </Container>
   );
 }

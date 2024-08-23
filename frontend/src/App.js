@@ -6,6 +6,7 @@ import LoginForm from "./login-form";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./dashboard";
 import UserForm from "./vacancy-form";
+import JobDetails from "./jobdetails";
 
 function App() {
   return (
@@ -13,9 +14,10 @@ function App() {
       <Headers />
       <Router>
         <Routes>
-          <Route path="/frontend" element={<LoginForm />} />
+          <Route path="/vacancy" element={<LoginForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create-job" element={<UserForm />} />
+          <Route path="/jobdetails/:id" element={<JobDetails />} />
           {/* Add more routes as needed */}
         </Routes>
       </Router>
