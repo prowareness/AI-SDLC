@@ -70,13 +70,14 @@ stages:
             backendAzureRmStorageAccountName: aistatefile
             backendAzureRmContainerName: statefile
             backendAzureRmKey: terraform.tfstate
-        - task: Bash@3
-          displayName: 'Import Disk Attachment Resource'
+        - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
+          displayName: 'Terraform : azurerm'
           inputs:
-            targetType: 'inline'
-            script: |
-              terraform import azurerm_virtual_machine_data_disk_attachment.disk_attachment /subscriptions/434d9ccf-0fbf-4203-a25a-314f7650f6f7/resourceGroups/AISDLC/providers/Microsoft.Compute/virtualMachines/SDLC-vm/dataDisks/AI-SDLC-Database
-            workingDirectory: 'IAC'
+            command: custom
+            customCommand: import
+            environmentServiceNameAzureRM: AzureCloud
+            backendAzureRmUseEnvironmentVariablesForAuthentication: false
+            backendAzureRmUseEntraIdForAuthentication: false
         - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
           displayName: 'Terraform : azurerm'
           inputs:
