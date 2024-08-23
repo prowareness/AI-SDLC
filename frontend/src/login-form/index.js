@@ -8,7 +8,8 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
+  const [loginError, setLoginError] = useState("");
+  const propstoPass = { username: username };
   const navigate = useNavigate();
 
   // Function to validate email format
@@ -22,6 +23,7 @@ const LoginForm = () => {
     // Reset error messages
     setUsernameError("");
     setPasswordError("");
+    setLoginError("");
 
     // Validate inputs
     let valid = true;
@@ -42,17 +44,22 @@ const LoginForm = () => {
     if (!valid) {
       return;
     }
-    navigate("/dashboard");
-    try {
-      const response = await axios.post("/api/login", {
-        emailid: username,
-        password: password,
-      });
 
-      console.log("Login successful:", response.data);
-      navigate("/dashboard");
+    try {
+      const response = await axios.post(
+        "http://172.190.178.164:8080/recruitment/api/login",
+        {
+          emailId: username,
+          password: password,
+        }
+      );
+      if (response.status === 200) {
+        console.log("Login successful:", response.data);
+        navigate("/dashboard", { state: propstoPass });
+      }
     } catch (error) {
       console.error("Login failed:", error);
+      setLoginError("Invalid username or incorrect password");
     }
   };
 
@@ -89,6 +96,7 @@ const LoginForm = () => {
             <div className="error-message">{passwordError}</div>
           )}
         </div>
+        {loginError && <div className="error-message">{loginError}</div>}
         <button type="submit" className="submit-btn">
           Submit
         </button>
