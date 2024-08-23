@@ -94,7 +94,6 @@ resource "azurerm_key_vault_secret" "ssh_public_key" {
   key_vault_id = "/subscriptions/434d9ccf-0fbf-4203-a25a-314f7650f6f7/resourceGroups/AISDLC/providers/Microsoft.KeyVault/vaults/AISDLC"
 }
 
-
 # Create a virtual machine
 resource "azurerm_linux_virtual_machine" "aisdlc_vm" {
   name                = "SDLC-vm"
