@@ -49,26 +49,39 @@ stages:
     jobs:
       - job: Build
         steps:
-          # Build backend using Maven
-          - task: MavenInstaller@3
-            inputs:
-              versionSpec: '3.x'
-        
-          - task: MavenPOMBuild@3
-            inputs:
-              projectFile: 'backend/pom.xml'
-              goals: 'package'
-        
-          # Build frontend using Gradle
           - task: GradleInstaller@1
             inputs:
               gradleVersion: 'latest'
-        
+
           - task: GradleBuild@2
             inputs:
-              projectFile: 'frontend/build.gradle'
-              tasks: 'build'
-        
+              projectFile: 'backend/build.gradle'
+              tasks: 'war'
+              codeCoverageToolOption: 'JaCoCo'
+              codeCoverageClassFilter: '+:com.example.backend.*'
+              codeCoverageClassFilesDirectories: 'backend/src/main/java'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.11'
+              publishJavaCodeCoverageResults: true
+          
+          # Build frontend using Node.js
+          - task: NodeInstaller@1
+            inputs:
+              nodeVersion: '14.x'
+          
+          - task: NpmInstall@1
+            inputs:
+              workingDir: 'frontend'
+          
+          - task: NpmBuild@1
+            inputs:
+              workingDir: 'frontend'
+              command: 'run build'
+          
+          - task: CopyFiles@2
+            inputs:
+              contents: 'frontend/dist/**'
+              targetFolder: '$(build.artifactStagingDirectory)'
           # Copy artifacts to Tomcat webapps folder
           - task: CopyFiles@2
             inputs:
