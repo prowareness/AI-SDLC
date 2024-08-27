@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -90,7 +92,7 @@ public class RecruitmentControllerTest {
         int offset = 0;
         String sortBy = "creationDate";
         String sortDirection = "DESC";
-        List<VacancyResponse> responses = Arrays.asList();
+        List<VacancyResponse> responses = List.of();
         long totalCount = 0;
 
         VacancyListResponse vacancyListResponse = VacancyListResponse.builder().vacancies(responses).total(totalCount).build();
@@ -165,4 +167,36 @@ public class RecruitmentControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
+
+    @Test
+    public void editVacancy_shouldReturnUpdatedVacancy_whenValidRequest() throws Exception {
+        String vacancyId = "JOB000001";
+        CreateVacancyRequest request = new CreateVacancyRequest();
+        request.setJobTitle("Updated Title");
+        request.setDescription("Updated Description");
+        request.setRequirements("Updated Requirements");
+        request.setLocation("Updated Location");
+        request.setMaxSalary(BigDecimal.valueOf(150000));
+        request.setApplicationDeadline(new Date());
+
+        VacancyResponse response = VacancyResponse.builder()
+                .vacancyId(vacancyId)
+                .jobTitle("Updated Title")
+                .description("Updated Description")
+                .requirements("Updated Requirements")
+                .location("Updated Location")
+                .maxSalary(BigDecimal.valueOf(150000))
+                .applicationDeadline(new Date())
+                .createdBy("john.doe@devon.nl")
+                .build();
+
+        when(vacancyService.editVacancy(any(String.class), any(CreateVacancyRequest.class))).thenReturn(response);
+
+        mockMvc.perform(put("/api/vacancies/{vacancyId}", vacancyId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
+    }
+
 }

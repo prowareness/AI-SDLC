@@ -186,4 +186,81 @@ public class VacancyServiceTest {
         // Then
         assertEquals(expectedCount, actualCount);
     }
+
+    @Test
+    public void editVacancy_shouldUpdateVacancy_whenValidRequest() {
+        // Given
+        String vacancyId = "JOB000001";
+        CreateVacancyRequest request = new CreateVacancyRequest();
+        request.setJobTitle("Updated Title");
+        request.setDescription("Updated Description");
+        request.setRequirements("Updated Requirements");
+        request.setLocation("Updated Location");
+        request.setMaxSalary(BigDecimal.valueOf(150000));
+        request.setApplicationDeadline(new Date());
+
+        Vacancy existingVacancy = Vacancy.builder()
+                .vacancyId(vacancyId)
+                .jobTitle("Old Title")
+                .description("Old Description")
+                .requirements("Old Requirements")
+                .location("Old Location")
+                .maxSalary(BigDecimal.valueOf(100000))
+                .applicationDeadline(LocalDateTime.now().plusDays(30))
+                .createdBy("john.doe@devon.nl")
+                .creationDate(LocalDateTime.now())
+                .build();
+
+        when(vacancyRepository.findById(vacancyId)).thenReturn(Optional.of(existingVacancy));
+        doNothing().when(vacancyRequestValidator).validateCreateVacancyRequest(any(CreateVacancyRequest.class));
+        when(vacancyRepository.save(any(Vacancy.class))).thenReturn(existingVacancy);
+
+        // When
+        VacancyResponse response = vacancyService.editVacancy(vacancyId, request);
+
+        // Then
+        assertEquals("Updated Title", response.getJobTitle());
+        assertEquals("Updated Description", response.getDescription());
+        assertEquals("Updated Requirements", response.getRequirements());
+        assertEquals("Updated Location", response.getLocation());
+        assertEquals(BigDecimal.valueOf(150000), response.getMaxSalary());
+    }
+
+    @Test
+    public void editVacancy_shouldThrowException_whenVacancyNotFound() {
+        // Given
+        String vacancyId = "INVALID_ID";
+        CreateVacancyRequest request = new CreateVacancyRequest();
+
+        when(vacancyRepository.findById(vacancyId)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(RuntimeException.class, () -> vacancyService.editVacancy(vacancyId, request));
+    }
+
+    @Test
+    public void editVacancy_shouldThrowException_whenValidationFails() {
+        // Given
+        String vacancyId = "JOB000001";
+        CreateVacancyRequest request = new CreateVacancyRequest();
+
+        Vacancy existingVacancy = Vacancy.builder()
+                .vacancyId(vacancyId)
+                .jobTitle("Old Title")
+                .description("Old Description")
+                .requirements("Old Requirements")
+                .location("Old Location")
+                .maxSalary(BigDecimal.valueOf(100000))
+                .applicationDeadline(LocalDateTime.now().plusDays(30))
+                .createdBy("john.doe@devon.nl")
+                .creationDate(LocalDateTime.now())
+                .build();
+
+        when(vacancyRepository.findById(vacancyId)).thenReturn(Optional.of(existingVacancy));
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Validation failed"))
+                .when(vacancyRequestValidator).validateCreateVacancyRequest(any(CreateVacancyRequest.class));
+
+        // When & Then
+        assertThrows(ResponseStatusException.class, () -> vacancyService.editVacancy(vacancyId, request));
+    }
 }
