@@ -32,3 +32,16 @@ CREATE TABLE "Vacancy" (
 -- You would need to manage the VacancyID incrementation in your application logic.
 --INSERT INTO Vacancy (VacancyId, JobTitle, Description, Requirements, Location, MaxSalary, ApplicationDeadline, CreatedBy, CreationDate)
 --VALUES ('Job00001', 'Developer', 'Looking for a Java developer', 'Must have hands-on experience in Java', 'Bangalore', 10000000.23, '2024-12-31 23:59:59', 'john.doe@devon.nl', datetime('now'));
+
+
+--Login Table
+CREATE TABLE Login (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       email_id TEXT NOT NULL UNIQUE,
+                       password TEXT NOT NULL,
+                       last_login TEXT DEFAULT CURRENT_TIMESTAMP,
+                       is_active INTEGER DEFAULT 1,
+                       creation_date TEXT DEFAULT CURRENT_TIMESTAMP,
+                       last_updated TEXT DEFAULT CURRENT_TIMESTAMP );
+
+--INSERT INTO Login (email_id, password) VALUES ('john.doe@devon.nl', 'devon123');

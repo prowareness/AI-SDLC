@@ -71,7 +71,6 @@ public class VacancyService {
     public VacancyListResponse getVacanciesCreatedByRecruiter(String createdBy, Integer limit, Integer offset, String sortBy, String sortDirection) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(offset, limit, sort);
-        //List<Vacancy> vacancies = vacancyRepository.findVacanciesByCreatedBy(createdBy, pageable);
         List<VacancyResponse> vacancies = generateVacancyResponseList(createdBy, pageable);
         long totalVacancies = vacancyRepository.countVacanciesByCreatedBy(createdBy);
         return VacancyListResponse.builder().vacancies(vacancies).total(totalVacancies).build();
@@ -83,8 +82,27 @@ public class VacancyService {
     }
 
     public VacancyResponse getVacancyById(String vacancyId) {
-        Vacancy vacancy = vacancyRepository.findById(vacancyId)
+        Vacancy vacancy = findVacancyById(vacancyId);
+        return convertVacancyToVacancyResponse(vacancy);
+    }
+
+    private Vacancy findVacancyById(String vacancyId) {
+        return vacancyRepository.findById(vacancyId)
                 .orElseThrow(() -> new RuntimeException("Vacancy not found with ID: " + vacancyId));
+    }
+
+    @Transactional
+    public VacancyResponse editVacancy(String vacancyId, CreateVacancyRequest editVacancyRequest) {
+        Vacancy vacancy = findVacancyById(vacancyId);
+        vacancyRequestValidator.validateCreateVacancyRequest(editVacancyRequest);
+        vacancy.setJobTitle(editVacancyRequest.getJobTitle());
+        vacancy.setDescription(editVacancyRequest.getDescription());
+        vacancy.setRequirements(editVacancyRequest.getRequirements());
+        vacancy.setLocation(editVacancyRequest.getLocation());
+        vacancy.setMaxSalary(editVacancyRequest.getMaxSalary());
+        vacancy.setApplicationDeadline(DateTimeUtil.convertToLocalDateTime(editVacancyRequest.getApplicationDeadline()));
+        vacancyRepository.save(vacancy);
+        log.info("Vacancy ID - {} updated with new vacancy details", vacancyId);
         return convertVacancyToVacancyResponse(vacancy);
     }
 

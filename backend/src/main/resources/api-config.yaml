@@ -109,6 +109,31 @@ paths:
         '404':
           description: Not Found
 
+
+    put:
+      summary: Edit a specific vacancy by ID
+      parameters:
+        - in: path
+          name: vacancyId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVacancyRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VacancyResponse'
+        '404':
+          description: Not Found
+
 components:
   schemas:
     LoginRequest:
@@ -216,3 +241,51 @@ components:
         total:
          type: long
          example: 5
+
+#    EditVacancyRequest:
+#      type: object
+#      properties:
+#        jobTitle:
+#          type: string
+#        description:
+#          type: string
+#        requirements:
+#          type: string
+#        location:
+#          type: string
+#        maxSalary:
+#          type: number
+#          format: float
+#        applicationDeadline:
+#          type: string
+#          format: date-time
+
+#    EditVacancyResponse:
+#      type: object
+#      properties:
+#        vacancyId:
+#          type: string
+#          example: JOB000001
+#        jobTitle:
+#          type: string
+#          example: Developer
+#        description:
+#          type: string
+#          example: Looking for a Java developer
+#        requirements:
+#          type: string
+#          example: Must be having hands-on experience in Java
+#        location:
+#          type: string
+#          example: Bangalore
+#        maxSalary:
+#          type: number
+#          format: float
+#          example: 10000000.23
+#        applicationDeadline:
+#          type: string
+#          format: date-time
+#          example: 2024-12-31T23:59:59
+#        createdBy:
+#          type: string
+#          example: "john.doe@devon.nl"
