@@ -11,49 +11,6 @@ stages:
         steps:
           - checkout: self
 
-  - stage: Build
-    jobs:
-      - job: BuildFrontend
-        steps:
-          - script: |
-              sh ./scripts/build-frontend.sh
-            displayName: "Run Build Frontend Stage"
-
-      - job: BuildBackend
-        steps:
-          - script: |
-              sh ./scripts/build-backend.sh
-            displayName: "Run Build Backend Stage"
-
-  - stage: Test
-    jobs:
-      - job: TestFrontend
-        steps:
-          - script: |
-              sh ./scripts/test-frontend.sh
-            displayName: "Run Test Frontend Stage"
-
-      - job: TestBackend
-        steps:
-          - script: |
-              sh ./scripts/test-backend.sh
-            displayName: "Run Test Backend Stage"
-
-  - stage: Package
-    dependsOn: Test
-    jobs:
-      - job: PackageFrontend
-        steps:
-          - script: |
-              sh ./scripts/package-frontend.sh
-            displayName: "Run Package Frontend Stage"
-
-      - job: PackageBackend
-        steps:
-          - script: |
-              sh ./scripts/package-backend.sh
-            displayName: "Run Package Backend Stage"
-
   - stage: Deploy
     dependsOn: Checkout
     jobs:
@@ -77,7 +34,43 @@ stages:
             workingDirectory: IAC
             environmentServiceNameAzureRM: AzureCloud
             backendAzureRmUseEnvironmentVariablesForAuthentication: false
-            backendAzureRmUseEntraIdForAuthentication: false    
+            backendAzureRmUseEntraIdForAuthentication: false   
+  - stage: Build
+    dependsOn: Deploy
+    jobs:
+      - job: Build
+        steps:
+          # Build backend using Maven
+          - task: MavenInstaller@3
+            inputs:
+              versionSpec: '3.x'
+        
+          - task: MavenPOMBuild@3
+            inputs:
+              projectFile: 'backend/pom.xml'
+              goals: 'package'
+        
+          # Build frontend using Gradle
+          - task: GradleInstaller@1
+            inputs:
+              gradleVersion: 'latest'
+        
+          - task: GradleBuild@2
+            inputs:
+              projectFile: 'frontend/build.gradle'
+              tasks: 'build'
+        
+          # Copy artifacts to Tomcat webapps folder
+          - task: CopyFiles@2
+            inputs:
+              contents: '**/target/*.war'
+              targetFolder: '/opt/tomcat/webapps'
+              overWrite: true
+              flattenFolders: true
+              hostName: '$(vm-hostname)'
+              username: '$(vm-username)'
+              password: '$(vm-password)'
+      
   - stage: APITests
     dependsOn: Deploy
     jobs:
