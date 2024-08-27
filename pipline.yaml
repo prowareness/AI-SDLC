@@ -49,11 +49,11 @@ stages:
     jobs:
       - job: Build
         steps:
-          - task: GradleInstaller@1
+          - task: Gradle@3
             inputs:
               gradleVersion: 'latest'
 
-          - task: GradleBuild@2
+          - task: Gradle@3
             inputs:
               projectFile: 'backend/build.gradle'
               tasks: 'war'
@@ -65,15 +65,15 @@ stages:
               publishJavaCodeCoverageResults: true
           
           # Build frontend using Node.js
-          - task: NodeInstaller@1
+          - task: NodeTool@0
             inputs:
               nodeVersion: '14.x'
           
-          - task: NpmInstall@1
+          - task: Npm@1
             inputs:
               workingDir: 'frontend'
           
-          - task: NpmBuild@1
+          - task: Npm@1
             inputs:
               workingDir: 'frontend'
               command: 'run build'
