@@ -45,7 +45,7 @@ stages:
             backendAzureRmUseEnvironmentVariablesForAuthentication: false
             backendAzureRmUseEntraIdForAuthentication: false   
   - stage: Build
-    dependsOn: Deploy
+    dependsOn: Checkout
     jobs:
       - job: Build
         steps:
@@ -94,7 +94,7 @@ stages:
               password: '$(vm-password)'
       
   - stage: APITests
-    dependsOn: Deploy
+    dependsOn: Build
     jobs:
       - job: RunAPITests
         steps:
