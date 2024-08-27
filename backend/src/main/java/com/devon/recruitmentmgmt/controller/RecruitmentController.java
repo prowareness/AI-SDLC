@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -46,8 +44,14 @@ public class RecruitmentController implements com.devon.recruitmentmgmt.api.ApiA
     }
 
     @Override
+    public ResponseEntity<VacancyResponse> apiVacanciesVacancyIdPut(String vacancyId, CreateVacancyRequest editVacancyRequest) {
+        log.info("Hit update /api/vacancies with vacancyID {} and details {}", vacancyId, editVacancyRequest.toString());
+        return new ResponseEntity<>(vacancyService.editVacancy(vacancyId, editVacancyRequest), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<LoginResponse> apiLoginPost(LoginRequest loginRequest) {
-        log.info("Hit /api/login with username - {}", loginRequest.getEmailId().toString());
+        log.info("Hit /api/login with username - {}", loginRequest.getEmailId());
         com.devon.recruitmentmgmt.to.LoginResponse response = loginService.validateLogin(loginRequest);
         if (response.getSuccess()) {
             return new ResponseEntity<>(response, HttpStatus.OK);
