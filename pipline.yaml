@@ -104,19 +104,19 @@ stages:
                 #!/bin/bash
 
                 # Stop Tomcat
-                systemctl stop tomcat
+                sudo systemctl stop tomcat
                 
                 # Remove existing WAR file
-                rm -rf /opt/tomcat/webapps/recruitment.war
-                rm -rf /opt/tomcat/webapps/vacancy.war
+                sudo rm -rf /opt/tomcat/webapps/recruitment.war
+                sudo rm -rf /opt/tomcat/webapps/vacancy.war
                 
                 # Copy new WAR file
-                cp /home/adminuser/targetpath/*.war /opt/tomcat/webapps/
+                sudo cp /home/adminuser/targetpath/*.war /opt/tomcat/webapps/
                 
                 # Start Tomcat
-                systemctl start tomcat
+                sudo systemctl start tomcat
                 
-                chmod 777 -R /opt/tomcat/
+                sudo chmod 777 -R /opt/tomcat/
       
   - stage: APITests
     dependsOn: Build
