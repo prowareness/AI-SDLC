@@ -40,6 +40,29 @@ stages:
     jobs:
       - job: Build
         steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo "Updating apt repository..."
+                sudo apt-get update -y
+                
+                echo "Installing OpenJDK 17..."
+                sudo apt-get install -y openjdk-17-jdk
+                
+                echo "Setting JAVA_HOME..."
+                sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
+                sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+                
+                echo "Verifying Java installation..."
+                java -version
+        
+          - script: |
+              echo "JAVA_HOME is set to $JAVA_HOME"
+              echo "Java version:"
+              java -version
+            displayName: 'Check Java Version'
+    
           - task: Gradle@3
             displayName: 'gradlew clean build'
             inputs:
