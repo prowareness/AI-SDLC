@@ -67,6 +67,7 @@ stages:
             displayName: 'gradlew clean build'
             inputs:
               gradleWrapperFile: backend/gradlew
+              options: '-Porg.gradle.java.home=/usr/lib/jvm/java-17-openjdk-amd64'
               workingDirectory: backend
               tasks: 'clean build'
           
