@@ -54,12 +54,12 @@ stages:
                 sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
                 sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
          
-          - task: CopyFilesOverSSH@0
-            displayName: 'Securely copy files to the remote machine'
-            inputs:
-              sshEndpoint: 'SSH-SDLCvm'
-              sourceFolder: '$(Build.SourcesDirectory)'
-              targetFolder: '~/targetpath'
+#          - task: CopyFilesOverSSH@0
+#            displayName: 'Securely copy files to the remote machine'
+#            inputs:
+#              sshEndpoint: 'SSH-SDLCvm'
+#              sourceFolder: '$(Build.SourcesDirectory)'
+#              targetFolder: '~/targetpath'
           - task: Gradle@3
             inputs:
               gradleWrapperFile: backend/gradlew
