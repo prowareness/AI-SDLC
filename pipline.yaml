@@ -66,9 +66,18 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                cd 'backend\build'
+                cd 'backend/build/libs'
                 ls
-          
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                cd 'frontend'
+                sudo apt install nodejs
+                sudo apt install npm
+                npm run build
+#                jar -cvf ROOT.war -C ROOT/ .
 #          # Build frontend using Node.js
 #          - task: NodeTool@0
 #            inputs:
