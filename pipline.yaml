@@ -41,19 +41,11 @@ stages:
       - job: Build
         steps:
           - task: Gradle@3
+            displayName: 'gradlew clean build'
             inputs:
-              gradleVersion: 'latest'
-
-          - task: Gradle@3
-            inputs:
-              projectFile: 'backend/build.gradle'
-              tasks: 'war'
-              codeCoverageToolOption: 'JaCoCo'
-              codeCoverageClassFilter: '+:com.example.backend.*'
-              codeCoverageClassFilesDirectories: 'backend/src/main/java'
-              javaHomeOption: 'JDKVersion'
-              jdkVersionOption: '1.11'
-              publishJavaCodeCoverageResults: true
+              gradleWrapperFile: backend/gradlew
+              workingDirectory: backend
+              tasks: 'clean build'
           
           # Build frontend using Node.js
           - task: NodeTool@0
