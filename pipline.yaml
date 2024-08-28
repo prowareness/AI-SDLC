@@ -86,6 +86,16 @@ stages:
                 npm run build
                 jar -cvf vacancy.war -C build/ .
                 ls
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                mkdir artifacts
+                cp backend/build/libs/recruitment.war artifacts/recruitment.war
+                cp frontend/vacancy.war artifacts/vacancy.war
+                cd artifacts
+                ls
       
   - stage: APITests
     dependsOn: Build
