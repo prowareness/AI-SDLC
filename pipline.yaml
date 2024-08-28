@@ -54,20 +54,23 @@ stages:
                 sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
                 sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
                 
+                # Export JAVA_HOME environment variable
+                echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" | sudo tee -a /etc/profile
+                echo "export PATH=$JAVA_HOME/bin:$PATH" | sudo tee -a /etc/profile
+                source /etc/profile
+                
                 echo "Verifying Java installation..."
                 java -version
-        
+          
           - script: |
               echo "JAVA_HOME is set to $JAVA_HOME"
               echo "Java version:"
               java -version
             displayName: 'Check Java Version'
-    
+          
           - task: Gradle@3
-            displayName: 'gradlew clean build'
             inputs:
               gradleWrapperFile: backend/gradlew
-              options: '-Porg.gradle.java.home=/usr/lib/jvm/java-17-openjdk-amd64'
               workingDirectory: backend
               tasks: 'clean build'
           
