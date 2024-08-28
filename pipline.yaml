@@ -96,6 +96,27 @@ stages:
               sshEndpoint: 'SSH-SDLCvm'
               sourceFolder: '$(Build.SourcesDirectory)/artifacts'
               targetFolder: '~/targetpath'
+          - task: SSH@0
+            inputs:
+              sshEndpoint: 'SSH-SDLCvm'
+              runOptions: 'commands'
+              commands: |
+                #!/bin/bash
+
+                # Stop Tomcat
+                sudo systemctl stop tomcat
+                
+                # Remove existing WAR file
+                sudo rm -rf /opt/tomcat/webapps/recruitment.war
+                sudo rm -rf /opt/tomcat/webapps/vacancy.war
+                
+                # Copy new WAR file
+                sudo cp /home/adminuser/targetpath/*.war /opt/tomcat/webapps/
+                
+                # Start Tomcat
+                sudo systemctl start tomcat
+                
+                sudo chmod 777 -R /opt/tomcat/
       
   - stage: APITests
     dependsOn: Build
