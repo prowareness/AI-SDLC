@@ -34,9 +34,10 @@ stages:
             workingDirectory: IAC
             environmentServiceNameAzureRM: AzureCloud
             backendAzureRmUseEnvironmentVariablesForAuthentication: false
-            backendAzureRmUseEntraIdForAuthentication: false   
+            backendAzureRmUseEntraIdForAuthentication: false
+
   - stage: Build
-    dependsOn: Checkout
+    dependsOn: Deploy
     jobs:
       - job: Build
         steps:
