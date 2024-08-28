@@ -67,7 +67,7 @@ stages:
               targetType: 'inline'
               script: |
                 cd backend
-                ll
+                ls
           
 #          # Build frontend using Node.js
 #          - task: NodeTool@0
