@@ -84,35 +84,8 @@ stages:
                 sudo apt install npm
                 npm install
                 npm run build
-#                jar -cvf ROOT.war -C ROOT/ .
-#          # Build frontend using Node.js
-#          - task: NodeTool@0
-#            inputs:
-#              nodeVersion: '14.x'
-#
-#          - task: Npm@1
-#            inputs:
-#              workingDir: 'frontend'
-#
-#          - task: Npm@1
-#            inputs:
-#              workingDir: 'frontend'
-#              command: 'run build'
-#
-#          - task: CopyFiles@2
-#            inputs:
-#              contents: 'frontend/dist/**'
-#              targetFolder: '$(build.artifactStagingDirectory)'
-#          # Copy artifacts to Tomcat webapps folder
-#          - task: CopyFiles@2
-#            inputs:
-#              contents: '**/target/*.war'
-#              targetFolder: '/opt/tomcat/webapps'
-#              overWrite: true
-#              flattenFolders: true
-#              hostName: '$(vm-hostname)'
-#              username: '$(vm-username)'
-#              password: '$(vm-password)'
+                jar -cvf vacancy.war -C build/ .
+                ls
       
   - stage: APITests
     dependsOn: Build
