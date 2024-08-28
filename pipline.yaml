@@ -54,27 +54,29 @@ stages:
                 sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
                 sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
                 
-                # Export JAVA_HOME environment variable
-                export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-                echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" | sudo tee -a ~/.bashrc
-                echo "export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH" | sudo tee -a ~/.bashrc
-                source ~/.bashrc
-                
-                echo "Verifying Java installation..."
-                java -version
-                echo "JAVA_HOME is set to $JAVA_HOME"
-          
-          - script: |
-              echo "JAVA_HOME is set to $JAVA_HOME"
-              echo "Java version:"
-              java -version
-            displayName: 'Check Java Version'
+#                # Export JAVA_HOME environment variable
+#                export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+#                echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" | sudo tee -a ~/.bashrc
+#                echo "export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH" | sudo tee -a ~/.bashrc
+#                source ~/.bashrc
+#
+#                echo "Verifying Java installation..."
+#                java -version
+#                echo "JAVA_HOME is set to $JAVA_HOME"
+#
+#          - script: |
+#              echo "JAVA_HOME is set to $JAVA_HOME"
+#              echo "Java version:"
+#              java -version
+#            displayName: 'Check Java Version'
           
           - task: Gradle@3
             inputs:
               gradleWrapperFile: backend/gradlew
               workingDirectory: backend
               tasks: 'clean build'
+              javaHomeOption: 'JDKPath'
+              jdkDirectory: '/usr/lib/jvm/java-17-openjdk-amd64'
           
           # Build frontend using Node.js
           - task: NodeTool@0
