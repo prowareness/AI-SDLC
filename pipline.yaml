@@ -76,6 +76,7 @@ stages:
                 cd 'frontend'
                 sudo apt install nodejs
                 sudo apt install npm
+                npm install
                 npm run build
 #                jar -cvf ROOT.war -C ROOT/ .
 #          # Build frontend using Node.js
