@@ -55,12 +55,14 @@ stages:
                 sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
                 
                 # Export JAVA_HOME environment variable
+                export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
                 echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" | sudo tee -a /etc/environment
                 echo "export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH" | sudo tee -a /etc/environment
                 source /etc/environment
                 
                 echo "Verifying Java installation..."
                 java -version
+                echo "JAVA_HOME is set to $JAVA_HOME"
           
           - script: |
               echo "JAVA_HOME is set to $JAVA_HOME"
