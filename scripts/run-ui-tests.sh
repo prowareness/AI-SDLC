@@ -5,6 +5,8 @@ AZURE_ARTIFACT_DIR="artifacts"
 
 sudo apt install nodejs
 
+sudo apt install npm
+
 # install dependencies
 npm install
 
