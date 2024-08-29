@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { login } from "../utils/utils";
-const { JobDetailsPage } = require('./JobDetailsPage');
+import { JobDetailsPage } from './JobDetailsPage'
 
 // Add an export statement for the 'login' function
 export { login };
