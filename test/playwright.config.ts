@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: "http://172.178.36.195:8080/vacancy/",
+    baseURL: "http://172.190.178.164:8080/vacancy/",
     trace: "on-first-retry",
     ignoreHTTPSErrors: true,
     screenshot: "only-on-failure",
