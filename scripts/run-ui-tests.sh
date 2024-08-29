@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define Azure artifact directory
-AZURE_ARTIFACT_DIR="${System.DefaultWorkingDirectory}/artifacts"
+AZURE_ARTIFACT_DIR="artifacts"
 
 # install dependencies
 npm install
