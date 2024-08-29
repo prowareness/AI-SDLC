@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ../api-test
+cd api-test
 # Define Postman collection and environment files
 COLLECTION_PATH="./test.collection.json"
 ENVIRONMENT_PATH="./environments/test.environment.json"
