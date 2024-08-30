@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import "./style.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const JobDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const props = location.state;
   const jobDetail = props.vacancy;
-  console.log("Job Details:", jobDetail);
   const [isEditable, setIsEditable] = useState(false);
   const [formData, setFormData] = useState({
     jobId: jobDetail.vacancyId,
+    jobTitle: jobDetail.jobTitle,
     jobDescription: jobDetail.description,
     jobRequirements: jobDetail.requirements,
+    maxSalary: jobDetail.maxSalary,
     location: jobDetail.location,
     lastDateToApply: jobDetail.applicationDeadline,
   });
-
   const handleEditClick = () => {
     setIsEditable(!isEditable);
   };
@@ -29,9 +30,25 @@ const JobDetails = () => {
     });
   };
 
-  const handleSave = () => {
-    setIsEditable(false);
-    navigate("/dashboard");
+  const handleSave = async () => {
+    try {
+      await axios.put(
+        `http://172.190.178.164:8080/recruitment/api/vacancies/${formData.jobId}`,
+        {
+          jobTitle: formData.jobTitle,
+          description: formData.jobDescription,
+          requirements: formData.jobRequirements,
+          location: formData.location,
+          applicationDeadline: formData.lastDateToApply,
+          maxSalary: formData.maxSalary,
+          createdBy: "john.doe@devon.nl",
+        }
+      );
+      setIsEditable(false);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error updating job details:", error);
+    }
   };
 
   return (
@@ -47,6 +64,16 @@ const JobDetails = () => {
               value={formData.jobId}
               onChange={handleInputChange}
               readOnly={true}
+            />
+          </div>
+          <div className="form-group">
+            <label>Job Title</label>
+            <input
+              type="text"
+              name="jobTitle"
+              value={formData.jobTitle}
+              onChange={handleInputChange}
+              readOnly={!isEditable}
             />
           </div>
           <div className="form-group">
@@ -80,6 +107,16 @@ const JobDetails = () => {
               <option value="Gurgaon">Gurgaon</option>
               <option value="Netherlands">Netherlands</option>
             </select>
+          </div>
+          <div className="form-group">
+            <label>Max Salary</label>
+            <input
+              type="text"
+              name="maxSalary"
+              value={formData.maxSalary}
+              onChange={handleInputChange}
+              readOnly={!isEditable}
+            />
           </div>
           <div className="form-group">
             <label>Last Date to Apply</label>
