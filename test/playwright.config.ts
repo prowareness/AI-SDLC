@@ -13,7 +13,8 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
     screenshot: "only-on-failure",
     video: "retain-on-failure",
-    headless: false,
+    headless: true,
+    browserName: 'chromium',
   },
 
   projects: [
