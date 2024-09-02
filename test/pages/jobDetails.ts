@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 
-class JobDetailsPage {
+export class JobDetailsPage {
   page: any;
   jobIdInput: any;
   jobDescriptionTextarea: any;
@@ -78,4 +78,3 @@ class JobDetailsPage {
   }
 }
 
-module.exports = { JobDetailsPage };

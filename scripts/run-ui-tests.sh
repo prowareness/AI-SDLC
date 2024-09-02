@@ -1,7 +1,11 @@
 #!/bin/bash
-
+cd test
 # Define Azure artifact directory
-AZURE_ARTIFACT_DIR="${System.DefaultWorkingDirectory}/artifacts"
+AZURE_ARTIFACT_DIR="artifacts"
+
+sudo apt install nodejs
+
+sudo apt install npm
 
 # install dependencies
 npm install

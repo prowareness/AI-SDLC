@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { login } from "../utils/utils";
-import { JobDetailsPage } from "../pages/jobDetails";
+import { JobDetailsPage } from '../pages/jobDetails'
 
 // Add an export statement for the 'login' function
 export { login };

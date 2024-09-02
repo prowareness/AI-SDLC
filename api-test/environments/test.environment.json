@@ -4,7 +4,7 @@
 	"values": [
 		{
 			"key": "baseUrl",
-			"value": "http://13.90.114.134:8080/backend",
+			"value": "http://172.190.178.164:8080/backend",
 			"type": "default",
 			"enabled": true
 		}

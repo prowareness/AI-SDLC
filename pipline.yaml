@@ -11,49 +11,6 @@ stages:
         steps:
           - checkout: self
 
-  - stage: Build
-    jobs:
-      - job: BuildFrontend
-        steps:
-          - script: |
-              sh ./scripts/build-frontend.sh
-            displayName: "Run Build Frontend Stage"
-
-      - job: BuildBackend
-        steps:
-          - script: |
-              sh ./scripts/build-backend.sh
-            displayName: "Run Build Backend Stage"
-
-  - stage: Test
-    jobs:
-      - job: TestFrontend
-        steps:
-          - script: |
-              sh ./scripts/test-frontend.sh
-            displayName: "Run Test Frontend Stage"
-
-      - job: TestBackend
-        steps:
-          - script: |
-              sh ./scripts/test-backend.sh
-            displayName: "Run Test Backend Stage"
-
-  - stage: Package
-    dependsOn: Test
-    jobs:
-      - job: PackageFrontend
-        steps:
-          - script: |
-              sh ./scripts/package-frontend.sh
-            displayName: "Run Package Frontend Stage"
-
-      - job: PackageBackend
-        steps:
-          - script: |
-              sh ./scripts/package-backend.sh
-            displayName: "Run Package Backend Stage"
-
   - stage: Deploy
     dependsOn: Checkout
     jobs:
@@ -77,9 +34,94 @@ stages:
             workingDirectory: IAC
             environmentServiceNameAzureRM: AzureCloud
             backendAzureRmUseEnvironmentVariablesForAuthentication: false
-            backendAzureRmUseEntraIdForAuthentication: false    
-  - stage: APITests
+            backendAzureRmUseEntraIdForAuthentication: false
+
+  - stage: Build
     dependsOn: Deploy
+    jobs:
+      - job: Build
+        steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo "Updating apt repository..."
+                sudo apt-get update -y
+                
+                echo "Installing OpenJDK 17..."
+                sudo apt-get install -y openjdk-17-jdk
+                
+                echo "Setting JAVA_HOME..."
+                sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
+                sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+         
+          - task: Gradle@3
+            inputs:
+              gradleWrapperFile: backend/gradlew
+              workingDirectory: backend
+              testResultsFiles: backend/build/test-results/test*.xml
+              tasks: 'clean build'
+              javaHomeOption: 'JDKPath'
+              jdkDirectory: '/usr/lib/jvm/java-17-openjdk-amd64'
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                cd 'backend/build/libs'
+                ls
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                cd 'frontend'
+                sudo apt install nodejs
+                sudo apt install npm
+                npm install
+                npm run build
+                jar -cvf vacancy.war -C build/ .
+                ls
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                mkdir artifacts
+                cp backend/build/libs/recruitment.war artifacts/recruitment.war
+                cp frontend/vacancy.war artifacts/vacancy.war
+                cd artifacts
+                ls
+          - task: CopyFilesOverSSH@0
+            displayName: 'Securely copy files to the remote machine'
+            inputs:
+              sshEndpoint: 'SSH-SDLCvm'
+              sourceFolder: '$(Build.SourcesDirectory)/artifacts'
+              targetFolder: '~/targetpath'
+          - task: SSH@0
+            inputs:
+              sshEndpoint: 'SSH-SDLCvm'
+              runOptions: 'commands'
+              commands: |
+                #!/bin/bash
+
+                # Stop Tomcat
+                sudo systemctl stop tomcat
+                
+                # Remove existing WAR file
+                sudo rm -rf /opt/tomcat/webapps/recruitment.war
+                sudo rm -rf /opt/tomcat/webapps/vacancy.war
+                
+                # Copy new WAR file
+                sudo cp /home/adminuser/targetpath/*.war /opt/tomcat/webapps/
+                
+                # Start Tomcat
+                sudo systemctl start tomcat
+                
+                sudo chmod 777 -R /opt/tomcat/
+      
+  - stage: APITests
+    dependsOn: Build
     jobs:
       - job: RunAPITests
         steps:
