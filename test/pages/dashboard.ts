@@ -1,7 +1,6 @@
-import { Page } from "@playwright/test";
+import { Page, Locator } from 'playwright';
 
 class DashboardPage {
-  private page: Page;
   public createJobButton;
   public vacancyTable;
   public totalVacancies;
@@ -10,7 +9,6 @@ class DashboardPage {
   public pageNumberButtons;
 
   constructor(page: Page) {
-    this.page = page;
     this.createJobButton = page.locator(".create-job-btn");
     this.vacancyTable = page.locator(".vacancy-table");
     this.totalVacancies = page.locator(".total-vacancies h2");
@@ -49,6 +47,11 @@ class DashboardPage {
 
   async goToPage(pageNumber: number) {
     await this.pageNumberButtons.locator(`:has-text('${pageNumber}')`).click();
+  }
+
+  async clickFirstJob() {
+    const firstJobRow = this.vacancyTable.locator("tbody tr").first();
+    await firstJobRow.click();
   }
 }
 

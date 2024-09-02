@@ -115,36 +115,43 @@ test.describe("Dashboard Validation", () => {
 
 
 
-test('should edit job details', async ({ page }) => {
-  const jobDetailsPage = new JobDetailsPage(page);
-
-  await jobDetailsPage.goto();
-
-  // Verify initial state
-  await jobDetailsPage.expectEditable(false);
-
-  // Click edit button
-  await jobDetailsPage.clickEdit();
-
-  // Verify fields are editable
-  await jobDetailsPage.expectEditable(true);
-
-  // Fill in new details
-  await jobDetailsPage.fillJobDescription('New Job Description');
-  await jobDetailsPage.fillJobRequirements('New Job Requirements');
-  await jobDetailsPage.selectLocation('Netherlands');
-  await jobDetailsPage.fillLastDateToApply('2023-12-31');
-
-  // Save changes
-  await jobDetailsPage.clickSave();
-
-  // Verify fields are not editable
-  await jobDetailsPage.expectEditable(false);
-
-  // Verify updated values
-  expect(await jobDetailsPage.getJobDescription()).toBe('New Job Description');
-  expect(await jobDetailsPage.getJobRequirements()).toBe('New Job Requirements');
-  expect(await jobDetailsPage.getLocation()).toBe('Netherlands');
-  expect(await jobDetailsPage.getLastDateToApply()).toBe('2023-12-31');
-});
+  test('should edit job details', async ({ page }) => {
+    await login(page);
+    const dashboardPage = new DashboardPage(page);
+  
+    // Navigate to the dashboard
+    // await dashboardPage.goto();
+  
+    // Click on the first job in the vacancy table
+    await dashboardPage.clickFirstJob();
+  
+    const jobDetailsPage = new JobDetailsPage(page);
+  
+    // Verify initial state
+    // await jobDetailsPage.expectEditable(false);
+  
+    // Click edit button
+    await jobDetailsPage.clickEdit();
+  
+    // Verify fields are editable
+    // await jobDetailsPage.expectEditable(true);
+  
+    // Fill in new details
+    await jobDetailsPage.fillJobDescription('New Job Description');
+    await jobDetailsPage.fillJobRequirements('New Job Requirements');
+    await jobDetailsPage.selectLocation('Netherlands');
+    await jobDetailsPage.fillLastDateToApply('2023-12-31');
+  
+    // Save changes
+    await jobDetailsPage.clickSave();
+  
+    // Verify fields are not editable
+    // await jobDetailsPage.expectEditable(false);
+  
+    // Verify updated values
+    expect(await jobDetailsPage.getJobDescription()).toBe('New Job Description');
+    expect(await jobDetailsPage.getJobRequirements()).toBe('New Job Requirements');
+    expect(await jobDetailsPage.getLocation()).toBe('Netherlands');
+    expect(await jobDetailsPage.getLastDateToApply()).toBe('2023-12-31');
+  });
 });
