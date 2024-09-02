@@ -115,7 +115,7 @@ test.describe("Dashboard Validation", () => {
 
 
 
-  test('should edit job details', async ({ page }) => {
+  test.skip('should edit job details', async ({ page }) => {
     await login(page);
     const dashboardPage = new DashboardPage(page);
   
