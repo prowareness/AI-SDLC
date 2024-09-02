@@ -21,10 +21,6 @@ function Headers() {
         >
           Vacancy Management
         </h2>
-        <div style={{ display: "flex", gap: "20px" }}>
-          <span style={{ marginTop: "35px" }}>Home</span>
-          <span style={{ marginTop: "35px" }}>Create vacancy</span>
-        </div>
       </div>
       <div
         style={{

@@ -53,7 +53,7 @@ const Dashboard = () => {
     };
 
     fetchVacancies();
-  }); // Dependency array includes createdBy
+  }, []);
 
   const renderPageNumbers = () => {
     let pages = [];
@@ -107,6 +107,7 @@ const Dashboard = () => {
       navigate(`/jobdetails/${vacancyId}`, {
         state: { vacancy: response.data },
       });
+      console.log("Vacancy details:", response.data);
     } catch (error) {
       console.error("Error fetching vacancy details:", error);
     }
