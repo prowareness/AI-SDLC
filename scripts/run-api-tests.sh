@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ../api-test
+cd api-test
 # Define Postman collection and environment files
 COLLECTION_PATH="./test.collection.json"
 ENVIRONMENT_PATH="./environments/test.environment.json"
@@ -10,7 +10,7 @@ REPORT_OUTPUT_DIR="./report"
 REPORT_NAME="postman_report.html"
 
 # Define Azure artifact directory
-AZURE_ARTIFACT_DIR="${System.DefaultWorkingDirectory}/artifacts"
+AZURE_ARTIFACT_DIR="artifacts"
 
 # Ensure the report output directory exists
 mkdir -p "$REPORT_OUTPUT_DIR"

@@ -74,7 +74,7 @@ resource "azurerm_public_ip" "aisdlc_public_ip" {
   name                = "SDLC-pip"
   location            = data.azurerm_resource_group.aisdlc_resource_group.location
   resource_group_name = data.azurerm_resource_group.aisdlc_resource_group.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "tls_private_key" "ssh_key" {
@@ -125,6 +125,20 @@ resource "azurerm_linux_virtual_machine" "aisdlc_vm" {
   user_data = base64encode(file("deploy_userdata.sh"))
 }
 
+# Data source to fetch the existing managed disk
+data "azurerm_managed_disk" "existing_disk" {
+  name                = "AI-SDLC-Database"
+  resource_group_name = data.azurerm_resource_group.aisdlc_resource_group.name
+}
+
+
+# Attach the existing disk to the virtual machine
+resource "azurerm_virtual_machine_data_disk_attachment" "disk_attachment" {
+  managed_disk_id    = data.azurerm_managed_disk.existing_disk.id
+  virtual_machine_id = azurerm_linux_virtual_machine.aisdlc_vm.id
+  lun                = 0 # Logical Unit Number, starting from 0
+  caching            = "ReadWrite"
+}
 
 output "public_ip_address" {
   value = azurerm_public_ip.aisdlc_public_ip.ip_address

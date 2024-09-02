@@ -14,4 +14,5 @@ cd ./IAC
 terraform init
 
 # Apply Terraform configuration
-terraform apply -auto-approve
+terraform import  azurerm_virtual_machine_data_disk_attachment.disk_attachment /subscriptions/434d9ccf-0fbf-4203-a25a-314f7650f6f7/resourceGroups/AISDLC/providers/Microsoft.Compute/virtualMachines/SDLC-vm/dataDisks/AI-SDLC-Database
+#terraform apply -auto-approve
