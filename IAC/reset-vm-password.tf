@@ -1,5 +1,13 @@
+resource "null_resource" "login" {
+  provisioner "local-exec" {
+    command = <<EOT
+      az login --service-principal -u "${var.client_id}" -p "${var.client_secret}" --tenant "${var.tenant_id}"
+    EOT
+  }
+}
+
 resource "null_resource" "reset_password" {
-  depends_on = [azurerm_linux_virtual_machine.aisdlc_vm]
+  depends_on = [azurerm_linux_virtual_machine.aisdlc_vm,null_resource.login] 
   
   triggers = {
     vm_id = azurerm_linux_virtual_machine.aisdlc_vm.id  # Trigger based on VM creation
