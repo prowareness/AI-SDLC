@@ -1,9 +1,16 @@
 resource "null_resource" "login" {
   provisioner "local-exec" {
     command = <<EOT
-      az login --service-principal -u "${var.client_id}" -p "${var.client_secret}" --tenant "${var.tenant_id}"
+      az login --service-principal -u "$client_id" -p "$client_secret" --tenant "$tenant_id"
     EOT
+
+    environment = {
+      client_id = data.azurerm_key_vault_secret.client_id.value
+      client_secret        = data.azurerm_key_vault_secret.client_secret.value
+      tenant_id      = data.azurerm_key_vault_secret.tenant_id.value
+    }
   }
+
 }
 
 resource "null_resource" "reset_password" {
