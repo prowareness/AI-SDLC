@@ -1,4 +1,12 @@
+data "azurerm_key_vault" "existing_vault" {
+  name                = "AISDLC"
+  resource_group_name = "AISDLC"
+}
 
+data "azurerm_key_vault_secret" "vm_password" {
+  name         = "AISDLC-newVM"
+  key_vault_id = data.azurerm_key_vault.existing_vault.id
+}
 
 data "azurerm_key_vault_secret" "subscription_id" {
   name         = "AISDLC-subscription-id"
