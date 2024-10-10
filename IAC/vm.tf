@@ -140,6 +140,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "disk_attachment" {
   caching            = "ReadWrite"
 }
 
+
 output "public_ip_address" {
   value = azurerm_public_ip.aisdlc_public_ip.ip_address
 }
