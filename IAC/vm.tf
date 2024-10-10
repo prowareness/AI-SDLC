@@ -140,15 +140,6 @@ resource "azurerm_virtual_machine_data_disk_attachment" "disk_attachment" {
   caching            = "ReadWrite"
 }
 
-data "azurerm_key_vault" "existing_vault" {
-  name                = "AISDLC"
-  resource_group_name = "AISDLC"
-}
-
-data "azurerm_key_vault_secret" "vm_password" {
-  name         = "AISDLC-newVM"
-  key_vault_id = data.azurerm_key_vault.existing_vault.id
-}
 
 output "public_ip_address" {
   value = azurerm_public_ip.aisdlc_public_ip.ip_address
