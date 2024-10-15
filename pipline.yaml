@@ -60,10 +60,28 @@ stages:
               gradleWrapperFile: backend/gradlew
               workingDirectory: backend
               testResultsFiles: backend/build/test-results/test*.xml
-              tasks: 'clean build'
+              tasks: 'clean build sonarqube'
               javaHomeOption: 'JDKPath'
               jdkDirectory: '/usr/lib/jvm/java-17-openjdk-amd64'
-
+            env:
+              SONAR_TOKEN: $(SONAR_TOKEN)
+          
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'Your-SonarCloud-Service-Connection'
+              organization: 'your-sonarcloud-organization'
+              scannerMode: 'CLI'
+              configMode: 'manual'
+              cliProjectKey: 'your-project-key'
+              cliProjectName: 'Your Project Name'
+              cliSources: '.'
+          
+          - task: SonarCloudAnalyze@1
+          
+          - task: SonarCloudPublish@1
+            inputs:
+              pollingTimeoutSec: '300'
+          
           - task: Bash@3
             inputs:
               targetType: 'inline'
