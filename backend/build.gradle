@@ -37,7 +37,7 @@ test {
     finalizedBy jacocoTestReport
 }
 
-sonarqube {
+sonar {
     properties {
         property "sonar.projectKey", "AI-SDLC"
         property "sonar.organization", "prowareness"
