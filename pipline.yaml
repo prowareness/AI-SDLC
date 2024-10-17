@@ -3,6 +3,10 @@ trigger:
 
 pool:
   vmImage: "ubuntu-latest"
+
+variables:
+   - name: SONAR_TOKEN
+     value: $(SONAR_TOKEN)
   
 stages:
   - stage: Checkout
@@ -68,12 +72,12 @@ stages:
           
           - task: SonarCloudPrepare@1
             inputs:
-              SonarCloud: 'Your-SonarCloud-Service-Connection'
-              organization: 'your-sonarcloud-organization'
+              SonarCloud: 'Sonarcloud'
+              organization: 'prowareness'
               scannerMode: 'CLI'
               configMode: 'manual'
-              cliProjectKey: 'your-project-key'
-              cliProjectName: 'Your Project Name'
+              cliProjectKey: 'AI-SDLC'
+              cliProjectName: 'AI-SDLC'
               cliSources: '.'
           
           - task: SonarCloudAnalyze@1
