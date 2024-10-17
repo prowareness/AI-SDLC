@@ -72,7 +72,7 @@ stages:
               configMode: 'manual'
               cliProjectKey: 'AI-SDLC'
               cliProjectName: 'AI-SDLC'
-              cliSources: '.'
+              cliSources: 'backend'
           
           - task: SonarCloudAnalyze@1
           
