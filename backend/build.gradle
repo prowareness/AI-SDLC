@@ -46,7 +46,7 @@ sonarqube {
     }
 }
 
-tasks.named('sonarqube').configure {
+tasks.named('sonar').configure {
     dependsOn test
 }
 
