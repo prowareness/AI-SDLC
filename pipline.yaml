@@ -54,7 +54,16 @@ stages:
                 echo "Setting JAVA_HOME..."
                 sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
                 sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-         
+          - task: SonarCloudPrepare@2
+            inputs:
+              SonarCloud: 'Sonarcloud'
+              organization: 'prowareness'
+              scannerMode: 'CLI'
+              configMode: 'manual'
+              cliProjectKey: 'AI-SDLC'
+              cliProjectName: 'AI-SDLC'
+              cliSources: 'backend'
+              
           - task: Gradle@3
             inputs:
               gradleWrapperFile: backend/gradlew
@@ -64,19 +73,9 @@ stages:
               javaHomeOption: 'JDKPath'
               jdkDirectory: '/usr/lib/jvm/java-17-openjdk-amd64'
           
-          - task: SonarCloudPrepare@1
-            inputs:
-              SonarCloud: 'Sonarcloud'
-              organization: 'prowareness'
-              scannerMode: 'CLI'
-              configMode: 'manual'
-              cliProjectKey: 'AI-SDLC'
-              cliProjectName: 'AI-SDLC'
-              cliSources: 'backend'
+          - task: SonarCloudAnalyze@2
           
-          - task: SonarCloudAnalyze@1
-          
-          - task: SonarCloudPublish@1
+          - task: SonarCloudPublish@2
             inputs:
               pollingTimeoutSec: '300'
           
