@@ -3,10 +3,6 @@ trigger:
 
 pool:
   vmImage: "ubuntu-latest"
-
-variables:
-   - name: SONAR_TOKEN
-     value: $(SONAR_TOKEN)
   
 stages:
   - stage: Checkout
@@ -67,8 +63,6 @@ stages:
               tasks: 'clean build sonarqube'
               javaHomeOption: 'JDKPath'
               jdkDirectory: '/usr/lib/jvm/java-17-openjdk-amd64'
-            env:
-              SONAR_TOKEN: $(SONAR_TOKEN)
           
           - task: SonarCloudPrepare@1
             inputs:
