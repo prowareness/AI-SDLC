@@ -118,7 +118,7 @@ sonar {
         property 'sonar.sources', 'src/main/java'
         property 'sonar.tests', 'src/test/java'
         property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-        property 'sonar.java.binaries', "${buildDir}/classes"
+        property 'sonar.java.binaries', "${buildDir}/classes/java/main"
         property 'sonar.exclusions', [
             'src/test/**/*',
             "${buildDir}/generated-sources/**/*"
