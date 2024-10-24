@@ -121,7 +121,8 @@ sonar {
         property 'sonar.java.binaries', files("${buildDir}/classes/java/main").asPath
         property 'sonar.exclusions', [
             'src/test/**/*',
-            "${buildDir}/generated-sources/**/*"
+            "${buildDir}/generated-sources/**/*",
+            '**/*.java'
         ]
         property 'sonar.test.inclusions', 'src/test/**/*'
     }
