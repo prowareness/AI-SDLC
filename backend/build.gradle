@@ -127,20 +127,6 @@ sonar {
         property 'sonar.test.inclusions', 'src/test/**/*'
     }
 }
-sonar {
-    properties {
-        property 'sonar.sources', 'src/main/java'
-        property 'sonar.tests', 'src/test/java'
-        property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-        property 'sonar.java.binaries', **/target/classes 
-        property 'sonar.exclusions', [
-            'src/test/**/*',
-            "${buildDir}/generated-sources/**/*",
-            '**/*.java'
-        ]
-        property 'sonar.test.inclusions', 'src/test/**/*'
-    }
-}
 
 // Task dependencies
 compileJava.dependsOn tasks.openApiGenerate
