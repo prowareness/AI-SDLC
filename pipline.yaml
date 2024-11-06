@@ -75,8 +75,7 @@ stages:
               testResultsFiles: '**/TEST-*.xml'
               tasks: 'clean build jacocoTestReport sonar'
               sonarQubeRunAnalysis: true
-          
-          - task: SonarCloudAnalyze@2
+        
           
           - task: SonarCloudPublish@2
             inputs:
