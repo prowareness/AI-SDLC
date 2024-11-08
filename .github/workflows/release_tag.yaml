@@ -1,0 +1,22 @@
+name: Create Release Tag
+
+on:
+  pull_request:
+    types:
+      - closed  # Trigger when a PR is closed
+
+jobs:
+  create_tag:
+    if: github.event.pull_request.merged == true  # Only run if the PR is merged
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create a version tag
+        run: |
+          # Define the tag based on PR merge or any other logic
+          TAG="v${{ github.event.pull_request.number }}"
+          git tag $TAG
+          git push origin $TAG
