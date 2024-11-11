@@ -54,16 +54,33 @@ stages:
                 echo "Setting JAVA_HOME..."
                 sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
                 sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-         
-          - task: Gradle@3
+          - task: SonarCloudPrepare@2
             inputs:
-              gradleWrapperFile: backend/gradlew
-              workingDirectory: backend
-              testResultsFiles: backend/build/test-results/test*.xml
-              tasks: 'clean build'
-              javaHomeOption: 'JDKPath'
-              jdkDirectory: '/usr/lib/jvm/java-17-openjdk-amd64'
-
+              SonarCloud: 'Sonarcloud'
+              organization: 'prowareness'
+              scannerMode: 'CLI'
+              configMode: 'manual'
+              cliProjectKey: 'AI-SDLC'
+              cliProjectName: 'AI-SDLC'
+              cliSources: 'backend'
+              
+          - task: Gradle@2
+            inputs:
+              workingDirectory: '$(System.DefaultWorkingDirectory)/backend'
+              gradleWrapperFile: '$(System.DefaultWorkingDirectory)/backend/gradlew'
+              gradleOptions: '-Xmx3072m'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '17'
+              publishJUnitResults: true
+              testResultsFiles: '**/TEST-*.xml'
+              tasks: 'clean build jacocoTestReport sonar'
+              sonarQubeRunAnalysis: true
+        
+          
+          - task: SonarCloudPublish@2
+            inputs:
+              pollingTimeoutSec: '300'
+          
           - task: Bash@3
             inputs:
               targetType: 'inline'
